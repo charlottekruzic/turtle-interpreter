@@ -14,6 +14,7 @@ DIGIT [0-9]
 %%
 
 {DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
+"forward"|fw          { return KW_FORWARD; }
 
 [\n\t ]*              /* whitespace */
 .                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
