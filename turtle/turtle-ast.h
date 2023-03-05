@@ -78,6 +78,11 @@ struct ast_node *make_cmd_down();
 struct ast_node *make_cmd_forward(struct ast_node *expr);
 struct ast_node *make_cmd_backward(struct ast_node *expr);
 struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_cmd_right(struct ast_node *expr);
+struct ast_node *make_cmd_left(struct ast_node *expr);
+struct ast_node *make_cmd_heading(struct ast_node *expr);
+struct ast_node *make_cmd_color(struct ast_node *expr);
+struct ast_node *make_cmd_home();
 
 // root of the abstract syntax tree
 struct ast

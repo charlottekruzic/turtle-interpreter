@@ -70,6 +70,48 @@ struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr
 	return node;
 }
 
+struct ast_node *make_cmd_right(struct ast_node *expr1){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_RIGHT;
+	node->children_count = 1;
+	node->children[0] = expr1;
+	return node;
+}
+struct ast_node *make_cmd_left(struct ast_node *expr1){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_LEFT;
+	node->children_count = 1;
+	node->children[0] = expr1;
+	return node;
+}
+struct ast_node *make_cmd_heading(struct ast_node *expr1){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_HEADING;
+	node->children_count = 1;
+	node->children[0] = expr1;
+	return node;
+}
+
+struct ast_node *make_cmd_color(struct ast_node *expr1){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_COLOR;
+	node->children_count = 1;
+	node->children[0] = expr1;
+	return node;
+}
+
+struct ast_node *make_cmd_home(){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_HOME;
+	node->children_count = 0;
+	return node;
+}
+
 
 
 void ast_destroy(struct ast *self)

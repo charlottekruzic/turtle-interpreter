@@ -57,6 +57,11 @@ cmd:
 	| KW_FORWARD expr   	{ $$ = make_cmd_forward($2); }
 	| KW_BACKWARD expr  	{ $$ = make_cmd_backward($2); }
 	| KW_POSITION expr expr { $$ = make_cmd_position($2,$3); }
+	| RIGHT	expr			{ $$ = make_cmd_right($2); }
+	| LEFT	expr			{ $$ = make_cmd_left($2); }
+	| HEADING expr			{ $$ = make_cmd_heading($2); }
+	| COLOR	expr			{ $$ = make_cmd_color($2); }
+	| HOME					{ $$ = make_cmd_home(); }
 ;
 
 expr:

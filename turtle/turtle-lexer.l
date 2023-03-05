@@ -20,6 +20,11 @@ CHAR [A-Za-z]
 "forward"|fw            { return KW_FORWARD; }
 "backward"|bw           { return KW_BACKWARD; }
 "position"|pos          { return KW_POSITION; }
+"right"|rt              { return RIGHT; }
+"left"|lt               { return LEFT; }
+"heading"|hd            { return HEADING; }
+"color"                 { return COLOR; }
+"home"                  { return HOME; }
 {CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 
