@@ -10,13 +10,20 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
+CHAR [A-Za-z]
 
 %%
 
-{DIGIT}+              { yylval.value = strtod(yytext, NULL); return VALUE; }
-"forward"|fw          { return KW_FORWARD; }
+"print"                 { return KW_PRINT; }
+"up"                    { return KW_UP; }
+"down"                  { return KW_DOWN; }
+"forward"|fw            { return KW_FORWARD; }
+"backward"|bw           { return KW_BACKWARD; }
+"position"|pos          { return KW_POSITION; }
+{CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
+{DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 
-[\n\t ]*              /* whitespace */
-.                     { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
+[\n\t ]*                /* whitespace */
+.                       { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
 
 %%
