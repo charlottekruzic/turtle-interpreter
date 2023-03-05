@@ -1,2 +1,25 @@
 - trouver les erreurs du début
-- 
+
+- commentaires jade
+- Nombres jade, couleurs charlotte, angles charlotte
+- commandes repeat jade, set jade, proc charlotte, call charlotte
+- expressions
+
+— soit un nombre ; jade
+— soit l’opération unaire - (opposé) ; jade
+— soit une opération binaire parmi + (addition), - (soustraction), * (multi-
+plication), / (division), ˆ (puissance) ; jade soustraction
+— soit un nom de variable ; charlotte
+— soit une expression entre parenthèses. charlotte
+— sin qui prend un paramètre qui représente un angle et qui calcule le sinus
+de son paramètre ;jade
+— cos qui prend un paramètre qui représente un angle et qui calcule le
+cosinus de son paramètre ;jade
+— tan qui prend un paramètre qui représente un angle et qui calcule la
+tangente de son paramètre ;jade
+— sqrt qui prend un paramètre réel et qui calcule la racine carrée de son
+paramètre ;charlotte
+— random qui prend deux paramètres qui indiquent les bornes de l’invervalle
+fermé où tirer un nombre au hasard.charlotte
+
+- attention priorités
