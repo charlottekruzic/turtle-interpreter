@@ -10,10 +10,8 @@ A faire :
 
 — soit un nombre ; jade
 — soit l’opération unaire - (opposé) ; jade
-— soit une opération binaire parmi + (addition), - (soustraction), * (multi-
-plication), / (division), ˆ (puissance) ; jade soustraction
+— soit une opération binaire parmi + (addition), - (soustraction) jade
 — soit un nom de variable ; charlotte
-— soit une expression entre parenthèses. charlotte
 — sin qui prend un paramètre qui représente un angle et qui calcule le sinus
 de son paramètre ;jade
 — cos qui prend un paramètre qui représente un angle et qui calcule le
@@ -25,7 +23,16 @@ paramètre ;charlotte
 — random qui prend deux paramètres qui indiquent les bornes de l’invervalle
 fermé où tirer un nombre au hasard.charlotte
 
+Trucs qui vont pas :
+    - VALUE prend les chiffres et les lettre ensemble (forward marche avec une lettre apres)
+        -> ajouter des trucs comme expr et cmd ?? comment on peut dire que certain prennent entier 
+            et d'autres des nombres à virgule
 
+
+Questions :
 - attention priorités
 - %left '*'  ???
+- fonction pour les opérateurs binaire : 1 seul suffit ?
+- quel kind pour les parentheses
+- evaluation des fonctions (sqrt, puissance, *, + ...)
 

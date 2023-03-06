@@ -35,9 +35,11 @@ void yyerror(struct ast *ret, const char *);
 %token				HEADING		"heading"
 %token				COLOR		"color"
 %token				HOME		"home"
+%token				SQRT		"sqrt"
 
 
-%left '*' 
+%left '^'
+%left '*' '/' 
 
 %type <node> unit cmds cmd expr
 
@@ -70,6 +72,10 @@ expr:
     VALUE             	{ $$ = make_expr_value($1);}
     /* TODO: add identifier */
 	| expr '*' expr     	{ $$ = make_op_multiplication($1, $3);}
+	| expr '/' expr     	{ $$ = make_op_division($1, $3);}
+	| expr '^' expr     	{ $$ = make_op_pow($1, $3);}
+	| '(' expr ')'      	{ $$ = make_expr_parentheses($2);}
+	| SQRT '(' expr ')'  	{ $$ = make_expr_sqrt($3); }
 ;
 
 %%

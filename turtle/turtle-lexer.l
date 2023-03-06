@@ -26,6 +26,11 @@ CHAR [A-Za-z]
 "color"                 { return COLOR; }
 "home"                  { return HOME; }
 "*"                     { return '*'; }
+"/"                     { return '/'; }
+"^"                     { return '^'; }
+"("                     { return '('; }
+")"                     { return ')'; }
+"sqrt"                  { return SQRT; }
 {CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 
