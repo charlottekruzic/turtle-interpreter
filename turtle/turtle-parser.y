@@ -37,6 +37,8 @@ void yyerror(struct ast *ret, const char *);
 %token				HOME		"home"
 
 
+%left '*' 
+
 %type <node> unit cmds cmd expr
 
 %%
@@ -65,8 +67,9 @@ cmd:
 ;
 
 expr:
-    VALUE             	{ $$ = make_expr_value($1); }
+    VALUE             	{ $$ = make_expr_value($1);}
     /* TODO: add identifier */
+	| expr '*' expr     	{ $$ = make_op_multiplication($1, $3);}
 ;
 
 %%

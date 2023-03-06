@@ -25,6 +25,7 @@ CHAR [A-Za-z]
 "heading"|hd            { return HEADING; }
 "color"                 { return COLOR; }
 "home"                  { return HOME; }
+"*"                     { return '*'; }
 {CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 

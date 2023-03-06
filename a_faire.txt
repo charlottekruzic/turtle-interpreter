@@ -1,5 +1,8 @@
-- trouver les erreurs du début
+Demander :
+- est ce qu'on peut utiliser les opérateurs sans cmd avant ?
 
+A faire :
+- trouver les erreurs du début
 - commentaires jade
 - Nombres jade, couleurs charlotte, angles charlotte
 - commandes repeat jade, set jade, proc charlotte, call charlotte
@@ -22,4 +25,7 @@ paramètre ;charlotte
 — random qui prend deux paramètres qui indiquent les bornes de l’invervalle
 fermé où tirer un nombre au hasard.charlotte
 
+
 - attention priorités
+- %left '*'  ???
+

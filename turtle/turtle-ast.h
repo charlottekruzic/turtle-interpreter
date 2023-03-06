@@ -70,8 +70,14 @@ struct ast_node
 };
 
 // TODO: make some constructors to use in parser.y
-// for example:
 struct ast_node *make_expr_value(double value);
+
+//Operators
+struct ast_node *make_op_multiplication(struct ast_node *left_node, struct ast_node *right_node);
+
+
+// Commandes
+
 struct ast_node *make_cmd_print(struct ast_node *expr);
 struct ast_node *make_cmd_up();
 struct ast_node *make_cmd_down();
