@@ -73,6 +73,9 @@ struct ast_node
 struct ast_node *make_expr_value(double value);
 struct ast_node *make_expr_parentheses(struct ast_node *expr);
 struct ast_node *make_expr_sqrt(struct ast_node *expr);
+struct ast_node *make_expr_sin(struct ast_node *expr);
+struct ast_node *make_expr_cos(struct ast_node *expr);
+struct ast_node *make_expr_tan(struct ast_node *expr);
 
 //Operators
 

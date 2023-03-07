@@ -37,6 +37,9 @@ void yyerror(struct ast *ret, const char *);
 %token				HOME		"home"
 %token				REPEAT		"repeat"
 %token				SQRT		"sqrt"
+%token				SIN			"sin"
+%token				COS			"cos"
+%token				TAN			"tan"
 
 %left '+' '-'
 %left '^'
@@ -86,6 +89,9 @@ expr:
 	| expr '^' expr     	{ $$ = make_op_pow($1, $3);}
 	| '(' expr ')'      	{ $$ = make_expr_parentheses($2);}
 	| SQRT '(' expr ')'  	{ $$ = make_expr_sqrt($3); }
+	| SIN '(' expr ')'  	{ $$ = make_expr_sin($3); }
+	| COS '(' expr ')'  	{ $$ = make_expr_cos($3); }
+	| TAN '(' expr ')'  	{ $$ = make_expr_tan($3); }
 
 ;
 

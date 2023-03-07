@@ -37,6 +37,9 @@ CHAR [A-Za-z]
 "("                     { return '('; }
 ")"                     { return ')'; }
 "sqrt"                  { return SQRT; }
+"sin"                   { return SIN; }
+"cos"                   { return COS; }
+"tan"                   { return TAN; }
 
 {CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }

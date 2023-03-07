@@ -34,6 +34,30 @@ struct ast_node *make_expr_sqrt(struct ast_node *expr) {
 	node->children[0] = expr;
 	return node;
 }
+struct ast_node *make_expr_sin(struct ast_node *expr) {
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_FUNC;
+	node->u.func = FUNC_SIN;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
+struct ast_node *make_expr_cos(struct ast_node *expr) {
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_FUNC;
+	node->u.func = FUNC_COS;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
+struct ast_node *make_expr_tan(struct ast_node *expr) {
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_FUNC;
+	node->u.func = FUNC_TAN;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
 
 
 struct ast_node *make_op_multiplication(struct ast_node *left_expr, struct ast_node *right_expr){
