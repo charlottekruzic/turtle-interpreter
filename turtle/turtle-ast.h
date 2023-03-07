@@ -73,7 +73,10 @@ struct ast_node
 struct ast_node *make_expr_value(double value);
 
 //Operators
+struct ast_node *make_op_uminus(struct ast_node *node);
 struct ast_node *make_op_multiplication(struct ast_node *left_node, struct ast_node *right_node);
+struct ast_node *make_op_addition(struct ast_node *left_node, struct ast_node *right_node);
+struct ast_node *make_op_soustraction(struct ast_node *left_node, struct ast_node *right_node);
 
 
 // Commandes
@@ -89,6 +92,8 @@ struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_heading(struct ast_node *expr);
 struct ast_node *make_cmd_color(struct ast_node *expr);
 struct ast_node *make_cmd_home();
+struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
+
 
 // root of the abstract syntax tree
 struct ast

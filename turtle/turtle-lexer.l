@@ -25,7 +25,11 @@ CHAR [A-Za-z]
 "heading"|hd            { return HEADING; }
 "color"                 { return COLOR; }
 "home"                  { return HOME; }
+"repeat"                { return REPEAT; }
+"+"                     { return '+'; }
+"-"                     { return '-'; }
 "*"                     { return '*'; }
+"#".*                   /* nothing */
 {CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 

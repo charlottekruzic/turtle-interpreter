@@ -35,9 +35,11 @@ void yyerror(struct ast *ret, const char *);
 %token				HEADING		"heading"
 %token				COLOR		"color"
 %token				HOME		"home"
+%token				REPEAT		"repeat"
 
-
-%left '*' 
+%left '+' '-'
+%left '*'
+%left UMINUS
 
 %type <node> unit cmds cmd expr
 
@@ -64,12 +66,17 @@ cmd:
 	| HEADING expr			{ $$ = make_cmd_heading($2); }
 	| COLOR	expr			{ $$ = make_cmd_color($2); }
 	| HOME					{ $$ = make_cmd_home(); }
+	| REPEAT expr cmd		{ $$ = make_cmd_repeat($2,$3); }
+
 ;
 
 expr:
     VALUE             	{ $$ = make_expr_value($1);}
     /* TODO: add identifier */
-	| expr '*' expr     	{ $$ = make_op_multiplication($1, $3);}
+	| expr '+' expr     		{ $$ = make_op_addition($1,$3); }
+  	| expr '-' expr     		{ $$ = make_op_soustraction($1,$3); }
+	| expr '*' expr     		{ $$ = make_op_multiplication($1, $3);}
+	| '-' expr %prec UMINUS  	{ $$ = make_op_uminus($2); }
 ;
 
 %%
