@@ -71,12 +71,17 @@ struct ast_node
 
 // TODO: make some constructors to use in parser.y
 struct ast_node *make_expr_value(double value);
+struct ast_node *make_expr_parentheses(struct ast_node *expr);
+struct ast_node *make_expr_sqrt(struct ast_node *expr);
 
 //Operators
+
 struct ast_node *make_op_uminus(struct ast_node *node);
-struct ast_node *make_op_multiplication(struct ast_node *left_node, struct ast_node *right_node);
 struct ast_node *make_op_addition(struct ast_node *left_node, struct ast_node *right_node);
 struct ast_node *make_op_soustraction(struct ast_node *left_node, struct ast_node *right_node);
+struct ast_node *make_op_multiplication(struct ast_node *left_expr, struct ast_node *right_expr);
+struct ast_node *make_op_division(struct ast_node *left_expr, struct ast_node *right_expr);
+struct ast_node *make_op_pow(struct ast_node *left_expr, struct ast_node *right_expr);
 
 
 // Commandes

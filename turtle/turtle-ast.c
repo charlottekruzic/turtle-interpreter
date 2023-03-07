@@ -17,13 +17,40 @@ struct ast_node *make_expr_value(double value)
 	return node;
 }
 
+struct ast_node *make_expr_parentheses(struct ast_node *expr)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	//node->kind = ??;
+	node->children_count = 1;
+	node->children[0] = node;
+	return node;
+}
 
-struct ast_node *make_op_multiplication(struct ast_node *left_node, struct ast_node *right_node){
+struct ast_node *make_expr_sqrt(struct ast_node *expr) {
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_FUNC;
+	node->u.func = FUNC_SQRT;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
+
+
+struct ast_node *make_op_multiplication(struct ast_node *left_expr, struct ast_node *right_expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_BINOP;
 	node->children_count = 2;
-	node->children[0] = left_node;
-	node->children[1] = right_node;
+	node->children[0] = left_expr;
+	node->children[1] = right_expr;
+	return node;
+}
+
+struct ast_node *make_op_division(struct ast_node *left_expr, struct ast_node *right_expr){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_BINOP;
+	node->children_count = 2;
+	node->children[0] = left_expr;
+	node->children[1] = right_expr;
 	return node;
 }
 
@@ -53,6 +80,17 @@ struct ast_node *make_op_soustraction(struct ast_node *left_node, struct ast_nod
 	node->children[1] = right_node;
 	return node;
 }
+
+struct ast_node *make_op_pow(struct ast_node *left_expr, struct ast_node *right_expr){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_BINOP;
+	node->children_count = 2;
+	node->children[0] = left_expr;
+	node->children[1] = right_expr;
+	return node;
+}
+
+
 
 struct ast_node *make_cmd_print(struct ast_node *expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));

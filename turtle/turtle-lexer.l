@@ -29,7 +29,15 @@ CHAR [A-Za-z]
 "+"                     { return '+'; }
 "-"                     { return '-'; }
 "*"                     { return '*'; }
+
 "#".*                   /* nothing */
+
+"/"                     { return '/'; }
+"^"                     { return '^'; }
+"("                     { return '('; }
+")"                     { return ')'; }
+"sqrt"                  { return SQRT; }
+
 {CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 
