@@ -60,60 +60,26 @@ struct ast_node *make_expr_tan(struct ast_node *expr) {
 }
 
 
-struct ast_node *make_op_multiplication(struct ast_node *left_expr, struct ast_node *right_expr){
+struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *right_expr, char binary_op){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_BINOP;
+	node->u.op = binary_op;
 	node->children_count = 2;
 	node->children[0] = left_expr;
 	node->children[1] = right_expr;
 	return node;
 }
 
-struct ast_node *make_op_division(struct ast_node *left_expr, struct ast_node *right_expr){
-	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	node->kind = KIND_EXPR_BINOP;
-	node->children_count = 2;
-	node->children[0] = left_expr;
-	node->children[1] = right_expr;
-	return node;
-}
 
 struct ast_node *make_op_uminus(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_UNOP;
+	node->u.op = '-';
 	node->children_count = 1;
 	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_op_addition(struct ast_node *left_node, struct ast_node *right_node)
-{
-	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	node->kind = KIND_EXPR_BINOP;
-	node->children_count = 2;
-	node->children[0] = left_node;
-	node->children[1] = right_node;
-	return node;
-}
-struct ast_node *make_op_soustraction(struct ast_node *left_node, struct ast_node *right_node)
-{
-	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	node->kind = KIND_EXPR_BINOP;
-	node->children_count = 2;
-	node->children[0] = left_node;
-	node->children[1] = right_node;
-	return node;
-}
-
-struct ast_node *make_op_pow(struct ast_node *left_expr, struct ast_node *right_expr){
-	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	node->kind = KIND_EXPR_BINOP;
-	node->children_count = 2;
-	node->children[0] = left_expr;
-	node->children[1] = right_expr;
-	return node;
-}
-
 
 
 struct ast_node *make_cmd_print(struct ast_node *expr){
@@ -169,37 +135,39 @@ struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr
 	return node;
 }
 
-struct ast_node *make_cmd_right(struct ast_node *expr1){
+struct ast_node *make_cmd_right(struct ast_node *expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_RIGHT;
 	node->children_count = 1;
-	node->children[0] = expr1;
+	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_cmd_left(struct ast_node *expr1){
+struct ast_node *make_cmd_left(struct ast_node *expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_LEFT;
 	node->children_count = 1;
-	node->children[0] = expr1;
+	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_cmd_heading(struct ast_node *expr1){
+struct ast_node *make_cmd_heading(struct ast_node *expr){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_HEADING;
 	node->children_count = 1;
-	node->children[0] = expr1;
+	node->children[0] = expr;
 	return node;
 }
 
-struct ast_node *make_cmd_color(struct ast_node *expr1){
+struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_COLOR;
-	node->children_count = 1;
+	node->children_count = 3;
 	node->children[0] = expr1;
+	node->children[1] = expr2;
+	node->children[2] = expr3;
 	return node;
 }
 
@@ -240,12 +208,74 @@ void context_create(struct context *self)
 
 void ast_eval(const struct ast *self, struct context *ctx)
 {
+	
 }
 
 /*
  * print
  */
+void ast_node_print(const struct ast_node *node){
+	if (node == NULL) {
+		//fprintf(stdout,"null\n");
+        return;
+    }
+
+
+	if(node->children_count==0){
+		//fprintf(stdout,"0\n");
+		if(node->kind == KIND_EXPR_VALUE){
+			fprintf(stdout,"%f ",node->u.value);
+		}
+
+		ast_node_print(node->next);
+	}
+	
+	else if(node->children_count==1){
+		//fprintf(stdout,"1\n");
+
+		switch (node->kind) {
+        	case KIND_CMD_SIMPLE:
+				switch (node->u.cmd) {
+					case CMD_FORWARD:
+						fprintf(stdout,"\nfw ");
+						break;
+					
+				}
+		}
+
+		ast_node_print(node->children[0]);
+		ast_node_print(node->next);
+	}
+	
+	else if(node->children_count==2){
+
+
+
+
+		//fprintf(stdout,"2\n");
+		ast_node_print(node->children[0]);
+		ast_node_print(node->children[1]);
+		ast_node_print(node->next);
+	}
+	
+	else if(node->children_count==3){
+
+
+
+
+		//fprintf(stdout,"3\n");
+		ast_node_print(node->children[0]);
+		ast_node_print(node->children[1]);
+		ast_node_print(node->children[2]);
+		ast_node_print(node->next);
+	}
+}
 
 void ast_print(const struct ast *self)
 {
+	if (self == NULL) {
+        return;
+    }
+	ast_node_print(self->unit);
 }
+

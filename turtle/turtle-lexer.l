@@ -10,7 +10,6 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
-CHAR [A-Za-z]
 
 %%
 
@@ -41,7 +40,6 @@ CHAR [A-Za-z]
 "cos"                   { return COS; }
 "tan"                   { return TAN; }
 
-{CHAR}+                 { yylval.value = strtod(yytext, NULL); return VALUE; }
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 
 [\n\t ]*                /* whitespace */

@@ -80,11 +80,7 @@ struct ast_node *make_expr_tan(struct ast_node *expr);
 //Operators
 
 struct ast_node *make_op_uminus(struct ast_node *node);
-struct ast_node *make_op_addition(struct ast_node *left_node, struct ast_node *right_node);
-struct ast_node *make_op_soustraction(struct ast_node *left_node, struct ast_node *right_node);
-struct ast_node *make_op_multiplication(struct ast_node *left_expr, struct ast_node *right_expr);
-struct ast_node *make_op_division(struct ast_node *left_expr, struct ast_node *right_expr);
-struct ast_node *make_op_pow(struct ast_node *left_expr, struct ast_node *right_expr);
+struct ast_node *make_binary_op(struct ast_node *left_node, struct ast_node *right_node, char operator);
 
 
 // Commandes
@@ -98,7 +94,7 @@ struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr
 struct ast_node *make_cmd_right(struct ast_node *expr);
 struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_heading(struct ast_node *expr);
-struct ast_node *make_cmd_color(struct ast_node *expr);
+struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3);
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
 
