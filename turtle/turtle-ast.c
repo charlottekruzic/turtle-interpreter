@@ -230,13 +230,13 @@ void ast_node_print(const struct ast_node *node){
         	case KIND_CMD_SIMPLE:
 				switch (node->u.cmd) {
 					case CMD_HOME:
-						fprintf(stdout,"\ncondition de départ");
+						fprintf(stdout,"\nhome");
 						break;
 					case CMD_UP:
-						fprintf(stdout,"\ncrayon levé");
+						fprintf(stdout,"\nup");
 						break;
 					case CMD_DOWN:
-						fprintf(stdout,"\ncrayon baissé");
+						fprintf(stdout,"\ndown");
 						break;
 				}
 		}
@@ -320,7 +320,7 @@ void ast_node_print(const struct ast_node *node){
         	case KIND_CMD_SIMPLE:
 				switch (node->u.cmd) {
 					case CMD_COLOR:
-						fprintf(stdout,"\nColor ");
+						fprintf(stdout,"\ncolor ");
 						break;
 				}
 
