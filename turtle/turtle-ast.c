@@ -226,6 +226,21 @@ void ast_node_print(const struct ast_node *node){
 		if(node->kind == KIND_EXPR_VALUE){
 			fprintf(stdout,"%f ",node->u.value);
 		}
+		switch (node->kind) {
+        	case KIND_CMD_SIMPLE:
+				switch (node->u.cmd) {
+					case CMD_HOME:
+						fprintf(stdout,"\ncondition de départ");
+						break;
+					case CMD_UP:
+						fprintf(stdout,"\ncrayon levé");
+						break;
+					case CMD_DOWN:
+						fprintf(stdout,"\ncrayon baissé");
+						break;
+				}
+		}
+	
 
 		ast_node_print(node->next);
 	}
@@ -239,8 +254,21 @@ void ast_node_print(const struct ast_node *node){
 					case CMD_FORWARD:
 						fprintf(stdout,"\nfw ");
 						break;
+					case CMD_BACKWARD:
+						fprintf(stdout,"\nbw ");
+						break;
+					case CMD_RIGHT:
+						fprintf(stdout,"\nright ");
+						break;
+					case CMD_LEFT:
+						fprintf(stdout,"\nleft ");
+						break;
+					case CMD_HEADING:
+						fprintf(stdout,"\nhd ");
+						break;
 					
 				}
+			
 		}
 
 		ast_node_print(node->children[0]);
@@ -248,7 +276,35 @@ void ast_node_print(const struct ast_node *node){
 	}
 	
 	else if(node->children_count==2){
+		
+		switch (node->kind) {
+        	case KIND_CMD_SIMPLE:
+				switch (node->u.cmd) {
+					case CMD_POSITION:
+						fprintf(stdout,"\npos ");
+						break;
+				}
+				break;
+			case KIND_CMD_REPEAT:
+				fprintf(stdout,"\nrepeat ");
+				break;
+			case KIND_EXPR_BINOP:
+				switch (node->u.op) {
+					case '+':
+						fprintf(stdout,"+ ");
+						break;
+					case '-':
+						fprintf(stdout,"- ");
+						break;
+					case '*':
+						fprintf(stdout,"* ");
+						break;
+					case '/':
+						fprintf(stdout,"/ ");
+						break;
+				}
 
+		}
 
 
 
@@ -260,7 +316,15 @@ void ast_node_print(const struct ast_node *node){
 	
 	else if(node->children_count==3){
 
+		switch (node->kind) {
+        	case KIND_CMD_SIMPLE:
+				switch (node->u.cmd) {
+					case CMD_COLOR:
+						fprintf(stdout,"\nColor ");
+						break;
+				}
 
+		}
 
 
 		//fprintf(stdout,"3\n");
