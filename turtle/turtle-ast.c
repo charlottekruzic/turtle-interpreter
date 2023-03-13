@@ -20,9 +20,9 @@ struct ast_node *make_expr_value(double value)
 struct ast_node *make_expr_parentheses(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	//node->kind = ??;
+	node->kind = KIND_EXPR_BLOCK;
 	node->children_count = 1;
-	node->children[0] = node;
+	node->children[0] = expr;
 	return node;
 }
 
@@ -223,10 +223,10 @@ void ast_node_print(const struct ast_node *node){
 
 	if(node->children_count==0){
 		//fprintf(stdout,"0\n");
-		if(node->kind == KIND_EXPR_VALUE){
-			fprintf(stdout,"%f ",node->u.value);
-		}
 		switch (node->kind) {
+			case KIND_EXPR_VALUE:
+				fprintf(stdout,"%.2f ",node->u.value);
+				break;
         	case KIND_CMD_SIMPLE:
 				switch (node->u.cmd) {
 					case CMD_HOME:
@@ -238,7 +238,11 @@ void ast_node_print(const struct ast_node *node){
 					case CMD_DOWN:
 						fprintf(stdout,"\ndown");
 						break;
+					default:
+						break;
 				}
+			default:
+				break;
 		}
 	
 
@@ -248,30 +252,65 @@ void ast_node_print(const struct ast_node *node){
 	else if(node->children_count==1){
 		//fprintf(stdout,"1\n");
 
-		switch (node->kind) {
-        	case KIND_CMD_SIMPLE:
-				switch (node->u.cmd) {
-					case CMD_FORWARD:
-						fprintf(stdout,"\nfw ");
+		if(node->kind==KIND_EXPR_BLOCK){
+			fprintf(stdout,"(");
+			ast_node_print(node->children[0]);
+			fprintf(stdout,")");	
+		}else{
+			switch (node->kind) {
+				case KIND_EXPR_UNOP:
+					fprintf(stdout,"-");
+					break;
+				case KIND_CMD_SIMPLE:
+					switch (node->u.cmd) {
+						case CMD_FORWARD:
+							fprintf(stdout,"\nfw ");
+							break;
+						case CMD_BACKWARD:
+							fprintf(stdout,"\nbw ");
+							break;
+						case CMD_RIGHT:
+							fprintf(stdout,"\nright ");
+							break;
+						case CMD_LEFT:
+							fprintf(stdout,"\nleft ");
+							break;
+						case CMD_HEADING:
+							fprintf(stdout,"\nhd ");
+							break;
+						case CMD_PRINT:
+							fprintf(stdout,"\nprint ");
+							break;
+						default:
+							break;
+						
+					}
+				case KIND_EXPR_FUNC:
+					switch (node->u.func)
+					{
+					case FUNC_SQRT:
+						fprintf(stdout,"\nsqrt ");
 						break;
-					case CMD_BACKWARD:
-						fprintf(stdout,"\nbw ");
+					case FUNC_SIN:
+						fprintf(stdout,"\nsin ");
 						break;
-					case CMD_RIGHT:
-						fprintf(stdout,"\nright ");
+					case FUNC_COS:
+						fprintf(stdout,"\ncos ");
 						break;
-					case CMD_LEFT:
-						fprintf(stdout,"\nleft ");
+					case FUNC_TAN:
+						fprintf(stdout,"\ntan ");
 						break;
-					case CMD_HEADING:
-						fprintf(stdout,"\nhd ");
+					default:
 						break;
-					
-				}
-			
+					}
+
+				default:
+					break;		
+			}
+
+			ast_node_print(node->children[0]);
 		}
 
-		ast_node_print(node->children[0]);
 		ast_node_print(node->next);
 	}
 	
@@ -282,6 +321,8 @@ void ast_node_print(const struct ast_node *node){
 				switch (node->u.cmd) {
 					case CMD_POSITION:
 						fprintf(stdout,"\npos ");
+						break;
+					default:
 						break;
 				}
 				break;
@@ -302,7 +343,11 @@ void ast_node_print(const struct ast_node *node){
 					case '/':
 						fprintf(stdout,"/ ");
 						break;
+					default:
+						break;
 				}
+			default:
+				break;
 
 		}
 
@@ -322,8 +367,11 @@ void ast_node_print(const struct ast_node *node){
 					case CMD_COLOR:
 						fprintf(stdout,"\ncolor ");
 						break;
+					default:
+						break;
 				}
-
+			default:
+				break;
 		}
 
 
@@ -341,5 +389,6 @@ void ast_print(const struct ast *self)
         return;
     }
 	ast_node_print(self->unit);
+	fprintf(stdout,"\n");
 }
 

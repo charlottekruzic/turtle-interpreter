@@ -88,10 +88,10 @@ expr:
 	| expr '/' expr     	{ $$ = make_binary_op($1, $3, '/');}
 	| expr '^' expr     	{ $$ = make_binary_op($1, $3, '^');}
 	| '(' expr ')'      	{ $$ = make_expr_parentheses($2);}
-	| SQRT '(' expr ')'  	{ $$ = make_expr_sqrt($3); }
-	| SIN '(' expr ')'  	{ $$ = make_expr_sin($3); }
-	| COS '(' expr ')'  	{ $$ = make_expr_cos($3); }
-	| TAN '(' expr ')'  	{ $$ = make_expr_tan($3); }
+	| SQRT expr  			{ $$ = make_expr_sqrt($2); }
+	| SIN expr  			{ $$ = make_expr_sin($2); }
+	| COS expr  			{ $$ = make_expr_cos($2); }
+	| TAN expr  			{ $$ = make_expr_tan($2); }
 
 ;
 
