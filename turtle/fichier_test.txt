@@ -1,5 +1,5 @@
 color 1 0 0
-fw 10+5
+fw (10+5)
 right 120
 color 0 1 0
 fw 100

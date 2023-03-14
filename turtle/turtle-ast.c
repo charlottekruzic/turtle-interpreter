@@ -26,7 +26,8 @@ struct ast_node *make_expr_parentheses(struct ast_node *expr)
 	return node;
 }
 
-struct ast_node *make_expr_sqrt(struct ast_node *expr) {
+struct ast_node *make_expr_sqrt(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_FUNC;
 	node->u.func = FUNC_SQRT;
@@ -34,7 +35,8 @@ struct ast_node *make_expr_sqrt(struct ast_node *expr) {
 	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_expr_sin(struct ast_node *expr) {
+struct ast_node *make_expr_sin(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_FUNC;
 	node->u.func = FUNC_SIN;
@@ -42,7 +44,8 @@ struct ast_node *make_expr_sin(struct ast_node *expr) {
 	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_expr_cos(struct ast_node *expr) {
+struct ast_node *make_expr_cos(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_FUNC;
 	node->u.func = FUNC_COS;
@@ -50,7 +53,8 @@ struct ast_node *make_expr_cos(struct ast_node *expr) {
 	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_expr_tan(struct ast_node *expr) {
+struct ast_node *make_expr_tan(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_FUNC;
 	node->u.func = FUNC_TAN;
@@ -59,8 +63,8 @@ struct ast_node *make_expr_tan(struct ast_node *expr) {
 	return node;
 }
 
-
-struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *right_expr, char binary_op){
+struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *right_expr, char binary_op)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_BINOP;
 	node->u.op = binary_op;
@@ -69,7 +73,6 @@ struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *rig
 	node->children[1] = right_expr;
 	return node;
 }
-
 
 struct ast_node *make_op_uminus(struct ast_node *expr)
 {
@@ -81,8 +84,8 @@ struct ast_node *make_op_uminus(struct ast_node *expr)
 	return node;
 }
 
-
-struct ast_node *make_cmd_print(struct ast_node *expr){
+struct ast_node *make_cmd_print(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_PRINT;
@@ -91,7 +94,8 @@ struct ast_node *make_cmd_print(struct ast_node *expr){
 	return node;
 }
 
-struct ast_node *make_cmd_up(){
+struct ast_node *make_cmd_up()
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_UP;
@@ -99,7 +103,8 @@ struct ast_node *make_cmd_up(){
 	return node;
 }
 
-struct ast_node *make_cmd_down(){
+struct ast_node *make_cmd_down()
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_DOWN;
@@ -107,7 +112,8 @@ struct ast_node *make_cmd_down(){
 	return node;
 }
 
-struct ast_node *make_cmd_forward(struct ast_node *expr){
+struct ast_node *make_cmd_forward(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_FORWARD;
@@ -116,7 +122,8 @@ struct ast_node *make_cmd_forward(struct ast_node *expr){
 	return node;
 }
 
-struct ast_node *make_cmd_backward(struct ast_node *expr){
+struct ast_node *make_cmd_backward(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_BACKWARD;
@@ -125,7 +132,8 @@ struct ast_node *make_cmd_backward(struct ast_node *expr){
 	return node;
 }
 
-struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr2){
+struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr2)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_POSITION;
@@ -135,7 +143,8 @@ struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr
 	return node;
 }
 
-struct ast_node *make_cmd_right(struct ast_node *expr){
+struct ast_node *make_cmd_right(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_RIGHT;
@@ -143,7 +152,8 @@ struct ast_node *make_cmd_right(struct ast_node *expr){
 	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_cmd_left(struct ast_node *expr){
+struct ast_node *make_cmd_left(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_LEFT;
@@ -151,7 +161,8 @@ struct ast_node *make_cmd_left(struct ast_node *expr){
 	node->children[0] = expr;
 	return node;
 }
-struct ast_node *make_cmd_heading(struct ast_node *expr){
+struct ast_node *make_cmd_heading(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_HEADING;
@@ -160,7 +171,8 @@ struct ast_node *make_cmd_heading(struct ast_node *expr){
 	return node;
 }
 
-struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3){
+struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_COLOR;
@@ -171,7 +183,8 @@ struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, 
 	return node;
 }
 
-struct ast_node *make_cmd_home(){
+struct ast_node *make_cmd_home()
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_HOME;
@@ -179,7 +192,8 @@ struct ast_node *make_cmd_home(){
 	return node;
 }
 
-struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2){
+struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_REPEAT;
 	node->children_count = 2;
@@ -187,8 +201,6 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 	node->children[1] = expr2;
 	return node;
 }
-
-
 
 void ast_destroy(struct ast *self)
 {
@@ -206,106 +218,304 @@ void context_create(struct context *self)
  * eval
  */
 
+void ast_node_eval(const struct ast_node *node, struct context *ctx)
+{
+	if (node == NULL)
+	{
+		// fprintf(stdout,"null\n");
+		return;
+	}
+
+	if (node->children_count == 0)
+	{
+		// fprintf(stdout,"0\n");
+		switch (node->kind)
+		{
+		case KIND_EXPR_VALUE:
+		
+			break;
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
+			{
+			case CMD_HOME:
+			
+				break;
+			case CMD_UP:
+			
+				break;
+			case CMD_DOWN:
+			
+				break;
+			default:
+				break;
+			}
+		default:
+			break;
+		}
+
+		ast_node_eval(node->next, ctx);
+	}
+
+	else if (node->children_count == 1)
+	{
+		// fprintf(stdout,"1\n");
+
+		if (node->kind == KIND_EXPR_BLOCK)
+		{
+			
+		}
+		else
+		{
+			switch (node->kind)
+			{
+			case KIND_EXPR_UNOP:
+			
+				break;
+			case KIND_CMD_SIMPLE:
+				switch (node->u.cmd)
+				{
+				case CMD_FORWARD:
+	
+					break;
+				case CMD_BACKWARD:
+				
+					break;
+				case CMD_RIGHT:
+				
+					break;
+				case CMD_LEFT:
+				
+					break;
+				case CMD_HEADING:
+				
+					break;
+				case CMD_PRINT:
+				
+					break;
+				default:
+					break;
+				}
+			case KIND_EXPR_FUNC:
+				switch (node->u.func)
+				{
+				case FUNC_SQRT:
+				
+					break;
+				case FUNC_SIN:
+				
+					break;
+				case FUNC_COS:
+				
+					break;
+				case FUNC_TAN:
+				
+					break;
+				default:
+					break;
+				}
+
+			default:
+				break;
+			}
+
+			ast_node_eval(node->children[0], ctx);
+		}
+
+		ast_node_eval(node->next, ctx);
+	}
+
+	else if (node->children_count == 2)
+	{
+
+		switch (node->kind)
+		{
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
+			{
+			case CMD_POSITION:
+			
+				break;
+			default:
+				break;
+			}
+			break;
+		case KIND_CMD_REPEAT:
+		
+			break;
+		case KIND_EXPR_BINOP:
+			switch (node->u.op)
+			{
+			case '+':
+			
+				break;
+			case '-':
+			
+				break;
+			case '*':
+			
+				break;
+			case '/':
+			
+				break;
+			default:
+				break;
+			}
+		default:
+			break;
+		}
+
+		// fprintf(stdout,"2\n");
+		ast_node_eval(node->children[0], ctx);
+		ast_node_eval(node->children[1], ctx);
+		ast_node_eval(node->next, ctx);
+	}
+
+	else if (node->children_count == 3)
+	{
+
+		switch (node->kind)
+		{
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
+			{
+			case CMD_COLOR:
+				if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
+					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
+					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
+                    	fprintf(stderr, "mauvaise valeur expr color.\n");
+                   		return;
+                }
+			
+				break;
+			default:
+				break;
+			}
+		default:
+			break;
+		}
+
+		// fprintf(stdout,"3\n");
+		ast_node_eval(node->children[0], ctx);
+		ast_node_eval(node->children[1], ctx);
+		ast_node_eval(node->children[2], ctx);
+		ast_node_eval(node->next, ctx);
+	}
+}
+
+
 void ast_eval(const struct ast *self, struct context *ctx)
 {
-	
+	if (self == NULL)
+	{
+		return;
+	}
+	ast_node_eval(self->unit, ctx);
+	fprintf(stdout, "\n");
 }
 
 /*
  * print
  */
-void ast_node_print(const struct ast_node *node){
-	if (node == NULL) {
-		//fprintf(stdout,"null\n");
-        return;
-    }
+void ast_node_print(const struct ast_node *node)
+{
+	if (node == NULL)
+	{
+		// fprintf(stdout,"null\n");
+		return;
+	}
 
-
-	if(node->children_count==0){
-		//fprintf(stdout,"0\n");
-		switch (node->kind) {
-			case KIND_EXPR_VALUE:
-				fprintf(stdout,"%.2f ",node->u.value);
+	if (node->children_count == 0)
+	{
+		// fprintf(stdout,"0\n");
+		switch (node->kind)
+		{
+		case KIND_EXPR_VALUE:
+			fprintf(stdout, "%.2f ", node->u.value);
+			break;
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
+			{
+			case CMD_HOME:
+				fprintf(stdout, "\nhome");
 				break;
-        	case KIND_CMD_SIMPLE:
-				switch (node->u.cmd) {
-					case CMD_HOME:
-						fprintf(stdout,"\nhome");
-						break;
-					case CMD_UP:
-						fprintf(stdout,"\nup");
-						break;
-					case CMD_DOWN:
-						fprintf(stdout,"\ndown");
-						break;
-					default:
-						break;
-				}
+			case CMD_UP:
+				fprintf(stdout, "\nup");
+				break;
+			case CMD_DOWN:
+				fprintf(stdout, "\ndown");
+				break;
 			default:
 				break;
+			}
+		default:
+			break;
 		}
-	
 
 		ast_node_print(node->next);
 	}
-	
-	else if(node->children_count==1){
-		//fprintf(stdout,"1\n");
 
-		if(node->kind==KIND_EXPR_BLOCK){
-			fprintf(stdout,"(");
+	else if (node->children_count == 1)
+	{
+		// fprintf(stdout,"1\n");
+
+		if (node->kind == KIND_EXPR_BLOCK)
+		{
+			fprintf(stdout, "(");
 			ast_node_print(node->children[0]);
-			fprintf(stdout,")");	
-		}else{
-			switch (node->kind) {
-				case KIND_EXPR_UNOP:
-					fprintf(stdout,"-");
+			fprintf(stdout, ")");
+		}
+		else
+		{
+			switch (node->kind)
+			{
+			case KIND_EXPR_UNOP:
+				fprintf(stdout, "-");
+				break;
+			case KIND_CMD_SIMPLE:
+				switch (node->u.cmd)
+				{
+				case CMD_FORWARD:
+					fprintf(stdout, "\nfw ");
 					break;
-				case KIND_CMD_SIMPLE:
-					switch (node->u.cmd) {
-						case CMD_FORWARD:
-							fprintf(stdout,"\nfw ");
-							break;
-						case CMD_BACKWARD:
-							fprintf(stdout,"\nbw ");
-							break;
-						case CMD_RIGHT:
-							fprintf(stdout,"\nright ");
-							break;
-						case CMD_LEFT:
-							fprintf(stdout,"\nleft ");
-							break;
-						case CMD_HEADING:
-							fprintf(stdout,"\nhd ");
-							break;
-						case CMD_PRINT:
-							fprintf(stdout,"\nprint ");
-							break;
-						default:
-							break;
-						
-					}
-				case KIND_EXPR_FUNC:
-					switch (node->u.func)
-					{
-					case FUNC_SQRT:
-						fprintf(stdout,"\nsqrt ");
-						break;
-					case FUNC_SIN:
-						fprintf(stdout,"\nsin ");
-						break;
-					case FUNC_COS:
-						fprintf(stdout,"\ncos ");
-						break;
-					case FUNC_TAN:
-						fprintf(stdout,"\ntan ");
-						break;
-					default:
-						break;
-					}
-
+				case CMD_BACKWARD:
+					fprintf(stdout, "\nbw ");
+					break;
+				case CMD_RIGHT:
+					fprintf(stdout, "\nright ");
+					break;
+				case CMD_LEFT:
+					fprintf(stdout, "\nleft ");
+					break;
+				case CMD_HEADING:
+					fprintf(stdout, "\nhd ");
+					break;
+				case CMD_PRINT:
+					fprintf(stdout, "\nprint ");
+					break;
 				default:
-					break;		
+					break;
+				}
+			case KIND_EXPR_FUNC:
+				switch (node->u.func)
+				{
+				case FUNC_SQRT:
+					fprintf(stdout, "\nsqrt ");
+					break;
+				case FUNC_SIN:
+					fprintf(stdout, "\nsin ");
+					break;
+				case FUNC_COS:
+					fprintf(stdout, "\ncos ");
+					break;
+				case FUNC_TAN:
+					fprintf(stdout, "\ntan ");
+					break;
+				default:
+					break;
+				}
+
+			default:
+				break;
 			}
 
 			ast_node_print(node->children[0]);
@@ -313,69 +523,72 @@ void ast_node_print(const struct ast_node *node){
 
 		ast_node_print(node->next);
 	}
-	
-	else if(node->children_count==2){
-		
-		switch (node->kind) {
-        	case KIND_CMD_SIMPLE:
-				switch (node->u.cmd) {
-					case CMD_POSITION:
-						fprintf(stdout,"\npos ");
-						break;
-					default:
-						break;
-				}
+
+	else if (node->children_count == 2)
+	{
+
+		switch (node->kind)
+		{
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
+			{
+			case CMD_POSITION:
+				fprintf(stdout, "\npos ");
 				break;
-			case KIND_CMD_REPEAT:
-				fprintf(stdout,"\nrepeat ");
-				break;
-			case KIND_EXPR_BINOP:
-				switch (node->u.op) {
-					case '+':
-						fprintf(stdout,"+ ");
-						break;
-					case '-':
-						fprintf(stdout,"- ");
-						break;
-					case '*':
-						fprintf(stdout,"* ");
-						break;
-					case '/':
-						fprintf(stdout,"/ ");
-						break;
-					default:
-						break;
-				}
 			default:
 				break;
-
+			}
+			break;
+		case KIND_CMD_REPEAT:
+			fprintf(stdout, "\nrepeat ");
+			break;
+		case KIND_EXPR_BINOP:
+			switch (node->u.op)
+			{
+			case '+':
+				fprintf(stdout, "+ ");
+				break;
+			case '-':
+				fprintf(stdout, "- ");
+				break;
+			case '*':
+				fprintf(stdout, "* ");
+				break;
+			case '/':
+				fprintf(stdout, "/ ");
+				break;
+			default:
+				break;
+			}
+		default:
+			break;
 		}
 
-
-
-		//fprintf(stdout,"2\n");
+		// fprintf(stdout,"2\n");
 		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
 		ast_node_print(node->next);
 	}
-	
-	else if(node->children_count==3){
 
-		switch (node->kind) {
-        	case KIND_CMD_SIMPLE:
-				switch (node->u.cmd) {
-					case CMD_COLOR:
-						fprintf(stdout,"\ncolor ");
-						break;
-					default:
-						break;
-				}
+	else if (node->children_count == 3)
+	{
+
+		switch (node->kind)
+		{
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
+			{
+			case CMD_COLOR:
+				fprintf(stdout, "\ncolor ");
+				break;
 			default:
 				break;
+			}
+		default:
+			break;
 		}
 
-
-		//fprintf(stdout,"3\n");
+		// fprintf(stdout,"3\n");
 		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
 		ast_node_print(node->children[2]);
@@ -385,10 +598,10 @@ void ast_node_print(const struct ast_node *node){
 
 void ast_print(const struct ast *self)
 {
-	if (self == NULL) {
-        return;
-    }
+	if (self == NULL)
+	{
+		return;
+	}
 	ast_node_print(self->unit);
-	fprintf(stdout,"\n");
+	fprintf(stdout, "\n");
 }
-

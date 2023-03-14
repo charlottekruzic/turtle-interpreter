@@ -48,3 +48,5 @@ pas fait :
 
 tokens
 	RANDOM
+
+couleurs, on peut dire red = 1 0 0 par exemple donc on ecrit la couleur mais on transforme en chiffre
