@@ -35,10 +35,12 @@ DIGIT [0-9]
 "^"                     { return '^'; }
 "("                     { return '('; }
 ")"                     { return ')'; }
+","                     { return ','; }
 "sqrt"                  { return SQRT; }
 "sin"                   { return SIN; }
 "cos"                   { return COS; }
 "tan"                   { return TAN; }
+"random"                { return RANDOM; }
 
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
 

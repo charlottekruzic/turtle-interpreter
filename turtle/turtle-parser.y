@@ -40,6 +40,7 @@ void yyerror(struct ast *ret, const char *);
 %token				SIN			"sin"
 %token				COS			"cos"
 %token				TAN			"tan"
+%token				RANDOM		"random"
 
 %left '+' '-'
 %left '^'
@@ -77,21 +78,22 @@ cmd:
 ;
 
 expr:
-    VALUE             		{ $$ = make_expr_value($1);}
+    VALUE             				{ $$ = make_expr_value($1);}
     /* TODO: add identifier */
 
-	| expr '+' expr    		{ $$ = make_binary_op($1,$3 ,'+'); }
-  	| expr '-' expr     	{ $$ = make_binary_op($1,$3, '-'); }
-	| '-' expr %prec UMINUS { $$ = make_op_uminus($2); }
+	| expr '+' expr    				{ $$ = make_binary_op($1,$3 ,'+'); }
+  	| expr '-' expr     			{ $$ = make_binary_op($1,$3, '-'); }
+	| '-' expr %prec UMINUS 		{ $$ = make_op_uminus($2); }
 
-	| expr '*' expr     	{ $$ = make_binary_op($1, $3, '*');}
-	| expr '/' expr     	{ $$ = make_binary_op($1, $3, '/');}
-	| expr '^' expr     	{ $$ = make_binary_op($1, $3, '^');}
-	| '(' expr ')'      	{ $$ = make_expr_parentheses($2);}
-	| SQRT expr  			{ $$ = make_expr_sqrt($2); }
-	| SIN expr  			{ $$ = make_expr_sin($2); }
-	| COS expr  			{ $$ = make_expr_cos($2); }
-	| TAN expr  			{ $$ = make_expr_tan($2); }
+	| expr '*' expr     			{ $$ = make_binary_op($1, $3, '*');}
+	| expr '/' expr     			{ $$ = make_binary_op($1, $3, '/');}
+	| expr '^' expr     			{ $$ = make_binary_op($1, $3, '^');}
+	| '(' expr ')'      			{ $$ = make_expr_parentheses($2);}
+	| SQRT expr  					{ $$ = make_expr_sqrt($2); }
+	| SIN expr  					{ $$ = make_expr_sin($2); }
+	| COS expr  					{ $$ = make_expr_cos($2); }
+	| TAN expr  					{ $$ = make_expr_tan($2); }
+	| RANDOM '(' expr ',' expr ')'	{ $$ = make_expr_random($3, $5); }
 
 ;
 

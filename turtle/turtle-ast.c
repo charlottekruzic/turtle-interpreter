@@ -62,6 +62,16 @@ struct ast_node *make_expr_tan(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+struct ast_node *make_expr_random(struct ast_node *expr1, struct ast_node *expr2)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_FUNC;
+	node->u.func = FUNC_RANDOM;
+	node->children_count = 2;
+	node->children[0] = expr1;
+	node->children[1] = expr2;
+	return node;
+}
 
 struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *right_expr, char binary_op)
 {
@@ -238,7 +248,10 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_HOME:
-				/*****************/
+				ctx->x = 0;
+				ctx->y = 0;
+				ctx->angle = 0;
+				ctx->up = false; 
 				break;
 			case CMD_UP:
 				ctx->up = true;
@@ -293,8 +306,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					ctx->angle=ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_PRINT:
-					fprintf(stdout, "\nprint '%f'", node->children[0]->u.value);
-					/*****************/
+					ast_node_print(node->children[0]);
 					break;
 				default:
 					break;
@@ -307,16 +319,13 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					return sqrt(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_SIN:
-				ast_node_eval(node->children[0], ctx);
-					/*****************/
+					return sin(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_COS:
-				ast_node_eval(node->children[0], ctx);
-					/*****************/
+					return cos(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_TAN:
-				ast_node_eval(node->children[0], ctx);
-					/*****************/
+					return tan(ast_node_eval(node->children[0], ctx));
 					break;
 				default:
 					break;
@@ -341,7 +350,8 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
-				
+				ctx->x =ast_node_eval(node->children[0], ctx);
+				ctx->y =ast_node_eval(node->children[1], ctx);
 				break;
 			default:
 				break;
