@@ -62,6 +62,7 @@ struct ast_node *make_expr_tan(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+
 struct ast_node *make_expr_random(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -214,6 +215,7 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 
 void ast_destroy(struct ast *self)
 {
+
 }
 
 /*
@@ -222,6 +224,10 @@ void ast_destroy(struct ast *self)
 
 void context_create(struct context *self)
 {
+	self->x = 0;
+	self->y = 0;
+	self->angle = 0;
+	self->up = false; 
 }
 
 /*
@@ -262,6 +268,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			default:
 				break;
 			}
+			break;
 		default:
 			break;
 		}
@@ -275,7 +282,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 
 		if (node->kind == KIND_EXPR_BLOCK)
 		{
-			return ast_node_eval(node->children[0], ctx); //revoir les priorité
+			return ast_node_eval(node->children[0], ctx); // revoir les priorité
 		}
 		else
 		{
@@ -289,7 +296,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				{
 				case CMD_FORWARD:
 					fprintf(stdout, "\nfw %f", ast_node_eval(node->children[0], ctx));
-					//Avancer dans la direction de fw (trouver la nouvelle position et changer dans context)
+					// Avancer dans la direction de fw (trouver la nouvelle position et changer dans context)
 					/*****************/
 					break;
 				case CMD_BACKWARD:
@@ -297,45 +304,48 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					/*****************/
 					break;
 				case CMD_RIGHT:
-					ctx->angle+=ast_node_eval(node->children[0], ctx);
+					ctx->angle += ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_LEFT:
-					ctx->angle-=ast_node_eval(node->children[0], ctx);
+					ctx->angle -= ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_HEADING:
-					ctx->angle=ast_node_eval(node->children[0], ctx);
+					ctx->angle = ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_PRINT:
+					fprintf(stdout, "\n");
 					ast_node_print(node->children[0]);
 					break;
 				default:
 					break;
 				}
+				break;
+			default:
+				break;
+
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
 				{
 				case FUNC_SQRT:
-
 					return sqrt(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_SIN:
+					printf("\n1\n");
 					return sin(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_COS:
+					printf("\n2\n");
 					return cos(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_TAN:
+					printf("\n3\n");
 					return tan(ast_node_eval(node->children[0], ctx));
 					break;
 				default:
 					break;
 				}
-
-			default:
 				break;
 			}
-
-			
 		}
 
 		ast_node_eval(node->next, ctx);
@@ -358,7 +368,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			}
 			break;
 		case KIND_CMD_REPEAT:
-		
+
 			break;
 		case KIND_EXPR_BINOP:
 			switch (node->u.op)
@@ -378,6 +388,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			default:
 				break;
 			}
+			break;
 		default:
 			break;
 		}
@@ -395,18 +406,19 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_COLOR:
-				/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
-					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
-					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
-                    	fprintf(stderr, "mauvaise valeur expr color.\n");
-                   		exit(2);
-                }*/
-				/*****************/
-			
+			/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
+				node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
+				node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
+					fprintf(stderr, "mauvaise valeur expr color.\n");
+					exit(2);
+			}*/
+			/*****************/
 				break;
 			default:
 				break;
+				
 			}
+			break;
 		default:
 			break;
 		}
@@ -417,8 +429,8 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		ast_node_eval(node->children[2], ctx);
 		ast_node_eval(node->next, ctx);
 	}
+	return 0;
 }
-
 
 void ast_eval(const struct ast *self, struct context *ctx)
 {
@@ -512,6 +524,7 @@ void ast_node_print(const struct ast_node *node)
 				default:
 					break;
 				}
+				break;
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
 				{
@@ -530,7 +543,7 @@ void ast_node_print(const struct ast_node *node)
 				default:
 					break;
 				}
-
+				break;
 			default:
 				break;
 			}
@@ -577,6 +590,7 @@ void ast_node_print(const struct ast_node *node)
 			default:
 				break;
 			}
+			break;
 		default:
 			break;
 		}
@@ -601,6 +615,7 @@ void ast_node_print(const struct ast_node *node)
 			default:
 				break;
 			}
+			break;
 		default:
 			break;
 		}

@@ -2,3 +2,4 @@ fw 3+1
 right 10
 print ((10+2)-12)
 fw sqrt(7+2)
+fw random(2,3)
