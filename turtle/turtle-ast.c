@@ -218,12 +218,12 @@ void context_create(struct context *self)
  * eval
  */
 
-void ast_node_eval(const struct ast_node *node, struct context *ctx)
+double ast_node_eval(const struct ast_node *node, struct context *ctx)
 {
 	if (node == NULL)
 	{
 		// fprintf(stdout,"null\n");
-		return;
+		return 0;
 	}
 
 	if (node->children_count == 0)
@@ -232,19 +232,19 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 		switch (node->kind)
 		{
 		case KIND_EXPR_VALUE:
-		
+			return node->u.value;
 			break;
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
 			case CMD_HOME:
-			
+				/*****************/
 				break;
 			case CMD_UP:
-			
+				ctx->up = true;
 				break;
 			case CMD_DOWN:
-			
+				ctx->up = false;
 				break;
 			default:
 				break;
@@ -262,35 +262,39 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 
 		if (node->kind == KIND_EXPR_BLOCK)
 		{
-			
+			return ast_node_eval(node->children[0], ctx); //revoir les priorité
 		}
 		else
 		{
 			switch (node->kind)
 			{
 			case KIND_EXPR_UNOP:
-			
+				return -ast_node_eval(node->children[0], ctx);
 				break;
 			case KIND_CMD_SIMPLE:
 				switch (node->u.cmd)
 				{
 				case CMD_FORWARD:
-	
+					fprintf(stdout, "\nfw %f", ast_node_eval(node->children[0], ctx));
+					//Avancer dans la direction de fw (trouver la nouvelle position et changer dans context)
+					/*****************/
 					break;
 				case CMD_BACKWARD:
-				
+					ast_node_eval(node->children[0], ctx);
+					/*****************/
 					break;
 				case CMD_RIGHT:
-				
+					ctx->angle+=ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_LEFT:
-				
+					ctx->angle-=ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_HEADING:
-				
+					ctx->angle=ast_node_eval(node->children[0], ctx);
 					break;
 				case CMD_PRINT:
-				
+					fprintf(stdout, "\nprint '%f'", node->children[0]->u.value);
+					/*****************/
 					break;
 				default:
 					break;
@@ -299,16 +303,20 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 				switch (node->u.func)
 				{
 				case FUNC_SQRT:
-				
+
+					return sqrt(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_SIN:
-				
+				ast_node_eval(node->children[0], ctx);
+					/*****************/
 					break;
 				case FUNC_COS:
-				
+				ast_node_eval(node->children[0], ctx);
+					/*****************/
 					break;
 				case FUNC_TAN:
-				
+				ast_node_eval(node->children[0], ctx);
+					/*****************/
 					break;
 				default:
 					break;
@@ -318,7 +326,7 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 				break;
 			}
 
-			ast_node_eval(node->children[0], ctx);
+			
 		}
 
 		ast_node_eval(node->next, ctx);
@@ -333,7 +341,7 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
-			
+				
 				break;
 			default:
 				break;
@@ -346,16 +354,16 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.op)
 			{
 			case '+':
-			
+				return ast_node_eval(node->children[0], ctx) + ast_node_eval(node->children[1], ctx);
 				break;
 			case '-':
-			
+				return ast_node_eval(node->children[0], ctx) - ast_node_eval(node->children[1], ctx);
 				break;
 			case '*':
-			
+				return ast_node_eval(node->children[0], ctx) * ast_node_eval(node->children[1], ctx);
 				break;
 			case '/':
-			
+				return ast_node_eval(node->children[0], ctx) / ast_node_eval(node->children[1], ctx);
 				break;
 			default:
 				break;
@@ -365,8 +373,6 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 		}
 
 		// fprintf(stdout,"2\n");
-		ast_node_eval(node->children[0], ctx);
-		ast_node_eval(node->children[1], ctx);
 		ast_node_eval(node->next, ctx);
 	}
 
@@ -379,12 +385,13 @@ void ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_COLOR:
-				if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
+				/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
 					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
 					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
                     	fprintf(stderr, "mauvaise valeur expr color.\n");
-                   		return;
-                }
+                   		exit(2);
+                }*/
+				/*****************/
 			
 				break;
 			default:

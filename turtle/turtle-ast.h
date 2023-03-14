@@ -128,7 +128,7 @@ void ast_node_print(const struct ast_node *node);
 void ast_print(const struct ast *self);
 
 // evaluate the tree and generate some basic primitives
-void ast_node_eval(const struct ast_node *node, struct context *ctx);
+double ast_node_eval(const struct ast_node *node, struct context *ctx);
 void ast_eval(const struct ast *self, struct context *ctx);
 
 #endif /* TURTLE_AST_H */
