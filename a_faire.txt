@@ -2,24 +2,14 @@ Demander :
 - est ce qu'on peut utiliser les opérateurs sans cmd avant ?
 
 A faire :
-- trouver les erreurs du début
-- commentaires jade
-- Nombres jade, couleurs charlotte, angles charlotte
-- commandes repeat jade, set jade, proc charlotte, call charlotte
+- couleurs avec lettres
+- angles ?
+- commandes repeat jade
+- set jade
+- proc charlotte
+- call charlotte
 - expressions
-
-— soit un nombre ; jade
-— soit l’opération unaire - (opposé) ; jade
-— soit une opération binaire parmi + (addition), - (soustraction) jade
 — soit un nom de variable ; charlotte
-— sin qui prend un paramètre qui représente un angle et qui calcule le sinus
-de son paramètre ;jade
-— cos qui prend un paramètre qui représente un angle et qui calcule le
-cosinus de son paramètre ;jade
-— tan qui prend un paramètre qui représente un angle et qui calcule la
-tangente de son paramètre ;jade
-— sqrt qui prend un paramètre réel et qui calcule la racine carrée de son
-paramètre ;charlotte
 — random qui prend deux paramètres qui indiquent les bornes de l’invervalle
 fermé où tirer un nombre au hasard.charlotte
 
@@ -32,7 +22,6 @@ Trucs qui vont pas :
 Questions :
 - attention priorités
 - %left '*'  ???
-- fonction pour les opérateurs binaire : 1 seul suffit ?
 - quel kind pour les parentheses
-- evaluation des fonctions (sqrt, puissance, *, + ...)
+- peut il y avoir une Variable = 0 ? car si on la trouve pas, on retourne 0
 

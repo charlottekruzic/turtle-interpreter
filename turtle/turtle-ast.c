@@ -7,7 +7,11 @@
 #include <string.h>
 #include <math.h>
 
-#define PI 3.141592653589793
+#define PI 3.14159265358979323846
+#define SQRT2 1.41421356237309504880
+#define SQRT3 1.7320508075688772935
+
+
 
 struct ast_node *make_expr_value(double value)
 {
@@ -213,14 +217,79 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 	return node;
 }
 
-void ast_destroy(struct ast *self)
+void context_destroy(struct context *self)
 {
+	// Libérer la mémoire allouée
+    struct variable* current_node = self->var_list;
+    while (current_node != NULL)
+    {
+        struct variable* next_node = current_node->next;
+        free(current_node);
+        current_node = next_node;
+    }
+}
 
+
+void ast_node_destroy(struct ast_node *self){
+	//détruire les noeuds
+	if (self == NULL) {
+        return;
+    }
+    for (int i = 0; i < self->children_count; i++) {
+        ast_node_destroy(self->children[i]);
+    }
+	ast_node_destroy(self->next);
+	free(self);
+}
+
+void ast_destroy(struct ast *self)
+{	
+	if(self==NULL){
+		return;
+	}
+	ast_node_destroy(self->unit);
 }
 
 /*
  * context
  */
+
+void new_variable(char* name, double value, struct context *ctx){
+	//espace pour la variable
+	struct variable* new_node = calloc(1, sizeof(struct variable));
+	new_node->name = name;
+	new_node->value = value;
+	new_node->next = NULL;
+
+	//ajout à la liste existante
+	if (ctx->var_list == NULL)
+        {
+            ctx->var_list = new_node;
+        }
+        else
+        {
+            struct variable* current_node = ctx->var_list;
+            while (current_node->next != NULL)
+            {
+                current_node = current_node->next;
+            }
+            current_node->next = new_node;
+        }
+}
+
+double does_variable_exist(char* name, struct context *ctx){
+	// Parcours de la liste de variables
+    struct variable* current_node = ctx->var_list;
+    while (current_node != NULL)
+    {
+		if(strcmp(current_node->name, name)){
+			return current_node->value;
+		}
+        printf("%s = %f\n", current_node->name, current_node->value);
+        current_node = current_node->next;
+    }
+	return 0;
+}
 
 void context_create(struct context *self)
 {
@@ -228,6 +297,10 @@ void context_create(struct context *self)
 	self->y = 0;
 	self->angle = 0;
 	self->up = false; 
+	self->var_list = NULL;
+	new_variable("PI", PI, self);
+	new_variable("SQRT2", SQRT2, self);
+	new_variable("SQRT3", SQRT3, self);
 }
 
 /*

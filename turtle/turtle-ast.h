@@ -76,13 +76,12 @@ struct ast_node *make_expr_sqrt(struct ast_node *expr);
 struct ast_node *make_expr_sin(struct ast_node *expr);
 struct ast_node *make_expr_cos(struct ast_node *expr);
 struct ast_node *make_expr_tan(struct ast_node *expr);
-struct ast_node *make_expr_random(struct ast_node *expr1,struct ast_node *expr2);
+struct ast_node *make_expr_random(struct ast_node *expr1, struct ast_node *expr2);
 
-//Operators
+// Operators
 
 struct ast_node *make_op_uminus(struct ast_node *node);
 struct ast_node *make_binary_op(struct ast_node *left_node, struct ast_node *right_node, char operator);
-
 
 // Commandes
 
@@ -99,7 +98,6 @@ struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, 
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
 
-
 // root of the abstract syntax tree
 struct ast
 {
@@ -107,22 +105,38 @@ struct ast
 };
 
 // do not forget to destroy properly! no leaks allowed!
+void ast_node_destroy(struct ast_node *self);
 void ast_destroy(struct ast *self);
 
 // the execution context
+
+
+struct variable
+{
+	char* name;
+	double value;
+	struct variable* next;
+};
+
+
 struct context
 {
 	double x;
 	double y;
 	double angle;
 	bool up;
+	struct variable* var_list;
 
 	// TODO: add procedure handling
 	// TODO: add variable handling
 };
 
+void new_variable(char* name, double value, struct context *ctx);
+double does_variable_exist(char* name, struct context *ctx);
+
 // create an initial context
 void context_create(struct context *self);
+void context_destroy(struct context *self);
 
 // print the tree as if it was a Turtle program
 void ast_node_print(const struct ast_node *node);
