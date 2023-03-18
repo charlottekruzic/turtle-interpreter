@@ -10,6 +10,7 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
+CAPITAL [A-Z]
 
 %%
 
@@ -25,6 +26,7 @@ DIGIT [0-9]
 "color"                 { return COLOR; }
 "home"                  { return HOME; }
 "repeat"                { return REPEAT; }
+"set"                   { return SET; }
 "+"                     { return '+'; }
 "-"                     { return '-'; }
 "*"                     { return '*'; }
@@ -43,7 +45,7 @@ DIGIT [0-9]
 "random"                { return RANDOM; }
 
 {DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
-
+{CAPITAL}+              { yylval.name = strdup(yytext); return NAME; }  
 [\n\t ]*                /* whitespace */
 .                       { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
 

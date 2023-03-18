@@ -12,6 +12,9 @@ A faire :
 — soit un nom de variable ; charlotte
 — random qui prend deux paramètres qui indiquent les bornes de l’invervalle
 fermé où tirer un nombre au hasard.charlotte
+- vérification que le nom de variable n'existe pas déjà
+
+
 
 Trucs qui vont pas :
     - VALUE prend les chiffres et les lettre ensemble (forward marche avec une lettre apres)
@@ -19,9 +22,13 @@ Trucs qui vont pas :
             et d'autres des nombres à virgule
 
 
+
+
+
+
 Questions :
 - attention priorités
 - %left '*'  ???
 - quel kind pour les parentheses
 - peut il y avoir une Variable = 0 ? car si on la trouve pas, on retourne 0
-
+- make_cmd_set on met dans cette fonction l'ajout de variable ?

@@ -41,6 +41,7 @@ void yyerror(struct ast *ret, const char *);
 %token				COS			"cos"
 %token				TAN			"tan"
 %token				RANDOM		"random"
+%token				SET			"set"
 
 %left '+' '-'
 %left '^'
@@ -74,13 +75,13 @@ cmd:
 	| COLOR	expr expr expr	{ $$ = make_cmd_color($2,$3,$4); }
 	| HOME					{ $$ = make_cmd_home(); }
 	| REPEAT expr cmd		{ $$ = make_cmd_repeat($2,$3); }
+	| SET expr expr			{ $$ = make_cmd_set($2,$3); }
 
 ;
 
 expr:
     VALUE             				{ $$ = make_expr_value($1);}
-    /* TODO: add identifier */
-
+	| NAME           				{ $$ = make_expr_name($1);}
 	| expr '+' expr    				{ $$ = make_binary_op($1,$3 ,'+'); }
   	| expr '-' expr     			{ $$ = make_binary_op($1,$3, '-'); }
 	| '-' expr %prec UMINUS 		{ $$ = make_op_uminus($2); }

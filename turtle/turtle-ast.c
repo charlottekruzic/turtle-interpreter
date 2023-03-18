@@ -21,6 +21,14 @@ struct ast_node *make_expr_value(double value)
 	return node;
 }
 
+struct ast_node *make_expr_name(char* name)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_NAME;
+	node->u.name = name;
+	return node;
+}
+
 struct ast_node *make_expr_parentheses(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -217,12 +225,22 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 	return node;
 }
 
+struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SET;
+	node->children_count = 2;
+	node->children[0] = expr1;
+	node->children[1] = expr2;
+	return node;
+}
+
 void context_destroy(struct context *self)
 {
 	// Libérer la mémoire allouée
     struct variable* current_node = self->var_list;
     while (current_node != NULL)
     {
+		//fprintf(stderr, "\nvariable : %s", current_node->name);
         struct variable* next_node = current_node->next;
         free(current_node);
         current_node = next_node;
@@ -282,10 +300,10 @@ double does_variable_exist(char* name, struct context *ctx){
     struct variable* current_node = ctx->var_list;
     while (current_node != NULL)
     {
-		if(strcmp(current_node->name, name)){
+		if(strcmp(current_node->name, name)==0){
+			printf("%s = %f\n", current_node->name, current_node->value);
 			return current_node->value;
 		}
-        printf("%s = %f\n", current_node->name, current_node->value);
         current_node = current_node->next;
     }
 	return 0;
@@ -307,6 +325,13 @@ void context_create(struct context *self)
  * eval
  */
 
+char* ast_node_char_eval(const struct ast_node *node, struct context *ctx){
+	if(node->kind == KIND_EXPR_NAME){
+		return node->u.name;
+	}
+	return "";
+}
+
 double ast_node_eval(const struct ast_node *node, struct context *ctx)
 {
 	if (node == NULL)
@@ -320,6 +345,9 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		// fprintf(stdout,"0\n");
 		switch (node->kind)
 		{
+		case KIND_EXPR_NAME:
+			return does_variable_exist(node->u.name, ctx);
+			break;
 		case KIND_EXPR_VALUE:
 			return node->u.value;
 			break;
@@ -429,6 +457,9 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 
 		switch (node->kind)
 		{
+		case KIND_CMD_SET:
+			new_variable(ast_node_char_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ctx);
+			break;
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
@@ -534,6 +565,9 @@ void ast_node_print(const struct ast_node *node)
 		case KIND_EXPR_VALUE:
 			fprintf(stdout, "%.2f ", node->u.value);
 			break;
+		case KIND_EXPR_NAME:
+			fprintf(stdout, "%s ", node->u.name);
+			break;
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
@@ -629,9 +663,11 @@ void ast_node_print(const struct ast_node *node)
 
 	else if (node->children_count == 2)
 	{
-
 		switch (node->kind)
 		{
+		case KIND_CMD_SET:
+			fprintf(stdout, "\nset ");
+			break;
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
