@@ -19,3 +19,5 @@ bw cos(12)
 fw tan(-2)
 print (3+2)
 fw sqrt(3)
+fw random(1, 3)
+

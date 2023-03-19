@@ -77,7 +77,8 @@ struct ast_node *make_expr_sqrt(struct ast_node *expr);
 struct ast_node *make_expr_sin(struct ast_node *expr);
 struct ast_node *make_expr_cos(struct ast_node *expr);
 struct ast_node *make_expr_tan(struct ast_node *expr);
-struct ast_node *make_expr_random(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_expr_random(struct ast_node *expr);
+struct ast_node *make_expr_parentheses_virgule(struct ast_node *expr1, struct ast_node *expr2);
 
 // Operators
 
@@ -99,6 +100,8 @@ struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, 
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
 struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_cmd_call(struct ast_node *expr);
 
 // root of the abstract syntax tree
 struct ast
@@ -120,6 +123,13 @@ struct variable
 	struct variable* next;
 };
 
+struct procedure
+{
+	char* name;
+	enum ast_kind kind;
+	struct procedure* next;
+};
+
 
 struct context
 {
@@ -128,6 +138,7 @@ struct context
 	double angle;
 	bool up;
 	struct variable* var_list;
+	struct procedure* proc_list;
 
 	// TODO: add procedure handling
 	// TODO: add variable handling
@@ -135,6 +146,9 @@ struct context
 
 void new_variable(char* name, double value, struct context *ctx);
 double does_variable_exist(char* name, struct context *ctx);
+
+void new_procedure(char* name, enum ast_kind kind, struct context *ctx);
+enum ast_kind does_procedure_exist(char* name, struct context *ctx);
 
 // create an initial context
 void context_create(struct context *self);

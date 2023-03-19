@@ -27,6 +27,8 @@ CAPITAL [A-Z]
 "home"                  { return HOME; }
 "repeat"                { return REPEAT; }
 "set"                   { return SET; }
+"proc"                  { return PROC; }
+"call"                  { return CALL; }
 "+"                     { return '+'; }
 "-"                     { return '-'; }
 "*"                     { return '*'; }

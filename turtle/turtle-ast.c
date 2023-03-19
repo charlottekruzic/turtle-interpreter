@@ -75,11 +75,20 @@ struct ast_node *make_expr_tan(struct ast_node *expr)
 	return node;
 }
 
-struct ast_node *make_expr_random(struct ast_node *expr1, struct ast_node *expr2)
+struct ast_node *make_expr_random(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_FUNC;
 	node->u.func = FUNC_RANDOM;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
+
+struct ast_node *make_expr_parentheses_virgule(struct ast_node *expr1, struct ast_node *expr2)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_EXPR_BLOCK;
 	node->children_count = 2;
 	node->children[0] = expr1;
 	node->children[1] = expr2;
@@ -234,6 +243,23 @@ struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2){
 	return node;
 }
 
+struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_PROC;
+	node->children_count = 2;
+	node->children[0] = expr1;
+	node->children[1] = expr2;
+	return node;
+}
+
+struct ast_node *make_cmd_call(struct ast_node *expr){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_CALL;
+	node->children_count = 1;
+	node->children[0] = expr;
+	return node;
+}
+
 void context_destroy(struct context *self)
 {
 	// Libérer la mémoire allouée
@@ -244,6 +270,16 @@ void context_destroy(struct context *self)
         struct variable* next_node = current_node->next;
         free(current_node);
         current_node = next_node;
+    }
+
+	// Libérer la mémoire allouée
+    struct procedure* current_node_procedure = self->proc_list;
+    while (current_node_procedure != NULL)
+    {
+		
+        struct procedure* next_node = current_node_procedure->next;
+        free(current_node_procedure);
+        current_node_procedure = next_node;
     }
 }
 
@@ -309,6 +345,45 @@ double does_variable_exist(char* name, struct context *ctx){
 	return 0;
 }
 
+void new_procedure(char* name, enum ast_kind kind, struct context *ctx){
+	//espace pour la procedure
+	struct procedure* new_node = calloc(1, sizeof(struct procedure));
+	new_node->name = name;
+	new_node->kind = kind;
+	new_node->next = NULL;
+
+	//ajout à la liste existante
+	if (ctx->proc_list == NULL)
+        {
+            ctx->proc_list = new_node;
+        }
+        else
+        {
+            struct procedure* current_node = ctx->proc_list;
+            while (current_node->next != NULL)
+            {
+                current_node = current_node->next;
+            }
+            current_node->next = new_node;
+        }
+}
+
+enum ast_kind does_procedure_exist(char* name, struct context *ctx){
+	// Parcours de la liste de procedures
+    struct procedure* current_node = ctx->proc_list;
+    while (current_node != NULL)
+    {
+		if(strcmp(current_node->name, name)==0){
+			//printf("%s\n", current_node->name);
+			return current_node->kind;
+		}
+        current_node = current_node->next;
+    }
+	return 0;
+}
+
+
+
 void context_create(struct context *self)
 {
 	self->x = 0;
@@ -319,6 +394,8 @@ void context_create(struct context *self)
 	new_variable("PI", PI, self);
 	new_variable("SQRT2", SQRT2, self);
 	new_variable("SQRT3", SQRT3, self);
+
+	self->proc_list = NULL;
 }
 
 /*
@@ -346,6 +423,8 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		switch (node->kind)
 		{
 		case KIND_EXPR_NAME:
+			
+			//return ast_node_eval(node->does_procedure_exist(node->u.name, ctx), ctx);
 			return does_variable_exist(node->u.name, ctx);
 			break;
 		case KIND_EXPR_VALUE:
@@ -396,6 +475,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				switch (node->u.cmd)
 				{
 				case CMD_FORWARD:
+				
 					fprintf(stdout, "\nfw %f", ast_node_eval(node->children[0], ctx));
 					// Avancer dans la direction de fw (trouver la nouvelle position et changer dans context)
 					/*****************/
@@ -405,13 +485,28 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					/*****************/
 					break;
 				case CMD_RIGHT:
-					ctx->angle += ast_node_eval(node->children[0], ctx);
+					if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360) {
+						ctx->angle += ast_node_eval(node->children[0], ctx);
+					}else{
+						fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+						exit(2);
+					}
 					break;
 				case CMD_LEFT:
-					ctx->angle -= ast_node_eval(node->children[0], ctx);
+					if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360) {
+						ctx->angle -= ast_node_eval(node->children[0], ctx);
+					}else{
+						fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+						exit(2);
+					}
 					break;
 				case CMD_HEADING:
-					ctx->angle = ast_node_eval(node->children[0], ctx);
+					if (node->children[0]->u.value < 360 && node->children[0]->u.value > 0) {
+						ctx->angle = ast_node_eval(node->children[0], ctx);
+					}else{
+						fprintf(stdout, "entrez un nombre compris entre 0 et 360\n");
+						exit(2);
+					}
 					break;
 				case CMD_PRINT:
 					fprintf(stdout, "\n");
@@ -421,40 +516,60 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					break;
 				}
 				break;
-			default:
+				default:
+					break;
+			case KIND_CMD_CALL:
+				ast_node_eval(node->children[0], ctx);
 				break;
-
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
 				{
 				case FUNC_SQRT:
-					return sqrt(ast_node_eval(node->children[0], ctx));
+					if(node->children[0]->u.value >= 0){
+						return sqrt(ast_node_eval(node->children[0], ctx));
+					}else{
+						fprintf(stdout, "entrez un nombre supérieur à 0\n");
+						exit(2);
+					}
 					break;
 				case FUNC_SIN:
-					printf("\n1\n");
-					return sin(ast_node_eval(node->children[0], ctx));
+					if (node->children[0]->u.value <= 90 && node->children[0]->u.value >= 0) {
+						return sin(ast_node_eval(node->children[0], ctx));
+					}else{
+						fprintf(stdout, "entrez un nombre compris entre 0 et 90\n");
+						exit(2);
+					}
 					break;
 				case FUNC_COS:
-					printf("\n2\n");
-					return cos(ast_node_eval(node->children[0], ctx));
+					if (node->children[0]->u.value <= 180 && node->children[0]->u.value >= 0) {
+						return cos(ast_node_eval(node->children[0], ctx));
+					}else{
+						fprintf(stdout, "entrez un nombre compris entre 0 et 180\n");
+						exit(2);
+					}
 					break;
 				case FUNC_TAN:
-					printf("\n3\n");
 					return tan(ast_node_eval(node->children[0], ctx));
 					break;
+				case FUNC_RANDOM:
+					return random(ast_node_eval(node->children[0], ctx));
+					break;
+					
 				default:
 					break;
 				}
 				break;
 			}
 		}
+				
+			
 
 		ast_node_eval(node->next, ctx);
 	}
 
 	else if (node->children_count == 2)
 	{
-
+		
 		switch (node->kind)
 		{
 		case KIND_CMD_SET:
@@ -472,6 +587,11 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			}
 			break;
 		case KIND_CMD_REPEAT:
+			/*****************/
+
+			break;
+		case KIND_CMD_PROC:
+			new_procedure(ast_node_char_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ctx);
 
 			break;
 		case KIND_EXPR_BINOP:
@@ -572,13 +692,13 @@ void ast_node_print(const struct ast_node *node)
 			switch (node->u.cmd)
 			{
 			case CMD_HOME:
-				fprintf(stdout, "\nhome");
+				fprintf(stdout, "\nhome ");
 				break;
 			case CMD_UP:
-				fprintf(stdout, "\nup");
+				fprintf(stdout, "\nup ");
 				break;
 			case CMD_DOWN:
-				fprintf(stdout, "\ndown");
+				fprintf(stdout, "\ndown ");
 				break;
 			default:
 				break;
@@ -632,6 +752,9 @@ void ast_node_print(const struct ast_node *node)
 					break;
 				}
 				break;
+			case KIND_CMD_CALL:
+				fprintf(stdout, "\ncall ");
+				break;
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
 				{
@@ -647,6 +770,9 @@ void ast_node_print(const struct ast_node *node)
 				case FUNC_TAN:
 					fprintf(stdout, "\ntan ");
 					break;
+				case FUNC_RANDOM:
+					fprintf(stdout, "random ");
+					break;
 				default:
 					break;
 				}
@@ -654,6 +780,9 @@ void ast_node_print(const struct ast_node *node)
 			default:
 				break;
 			}
+		
+				
+			
 
 			ast_node_print(node->children[0]);
 		}
@@ -663,8 +792,12 @@ void ast_node_print(const struct ast_node *node)
 
 	else if (node->children_count == 2)
 	{
+		
+		
+		
 		switch (node->kind)
 		{
+		
 		case KIND_CMD_SET:
 			fprintf(stdout, "\nset ");
 			break;
@@ -680,6 +813,17 @@ void ast_node_print(const struct ast_node *node)
 			break;
 		case KIND_CMD_REPEAT:
 			fprintf(stdout, "\nrepeat ");
+			break;
+		
+		case KIND_EXPR_BLOCK:
+			fprintf(stdout, "(");
+			ast_node_print(node->children[0]);
+			fprintf(stdout, ",");
+			ast_node_print(node->children[1]);
+			fprintf(stdout, ")");
+			break;
+		case KIND_CMD_PROC:
+			fprintf(stdout, "\nproc ");
 			break;
 		case KIND_EXPR_BINOP:
 			switch (node->u.op)
@@ -703,7 +847,7 @@ void ast_node_print(const struct ast_node *node)
 		default:
 			break;
 		}
-
+		
 		// fprintf(stdout,"2\n");
 		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);

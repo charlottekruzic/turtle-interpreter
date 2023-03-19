@@ -1,2 +1,2 @@
-set PIA 2012
-right PIA
+proc JADE down
+call JADE
