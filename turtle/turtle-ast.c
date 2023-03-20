@@ -85,10 +85,11 @@ struct ast_node *make_expr_random(struct ast_node *expr)
 	return node;
 }
 
-struct ast_node *make_expr_parentheses_virgule(struct ast_node *expr1, struct ast_node *expr2)
+struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	node->kind = KIND_EXPR_BLOCK;
+	node->kind = KIND_EXPR_BINOP;
+	node->u.op = ',';
 	node->children_count = 2;
 	node->children[0] = expr1;
 	node->children[1] = expr2;
@@ -780,9 +781,6 @@ void ast_node_print(const struct ast_node *node)
 			default:
 				break;
 			}
-		
-				
-			
 
 			ast_node_print(node->children[0]);
 		}
@@ -792,7 +790,6 @@ void ast_node_print(const struct ast_node *node)
 
 	else if (node->children_count == 2)
 	{
-		
 		
 		
 		switch (node->kind)
@@ -815,17 +812,18 @@ void ast_node_print(const struct ast_node *node)
 			fprintf(stdout, "\nrepeat ");
 			break;
 		
-		case KIND_EXPR_BLOCK:
+		/*case KIND_EXPR_BLOCK:
 			fprintf(stdout, "(");
 			ast_node_print(node->children[0]);
 			fprintf(stdout, ",");
 			ast_node_print(node->children[1]);
 			fprintf(stdout, ")");
-			break;
+			break;*/
 		case KIND_CMD_PROC:
 			fprintf(stdout, "\nproc ");
 			break;
 		case KIND_EXPR_BINOP:
+			ast_node_print(node->children[0]);
 			switch (node->u.op)
 			{
 			case '+':
@@ -840,6 +838,9 @@ void ast_node_print(const struct ast_node *node)
 			case '/':
 				fprintf(stdout, "/ ");
 				break;
+			case ',':
+				fprintf(stdout, ", ");
+				break;
 			default:
 				break;
 			}
@@ -849,7 +850,6 @@ void ast_node_print(const struct ast_node *node)
 		}
 		
 		// fprintf(stdout,"2\n");
-		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
 		ast_node_print(node->next);
 	}

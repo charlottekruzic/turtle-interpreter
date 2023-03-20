@@ -79,7 +79,7 @@ cmd:
 	| REPEAT expr cmd		{ $$ = make_cmd_repeat($2,$3); }
 	| SET expr expr			{ $$ = make_cmd_set($2,$3); }
 	| PROC expr cmd			{ $$ = make_cmd_proc($2,$3); }
-	| CALL expr 				{ $$ = make_cmd_call($2); }
+	| CALL expr 			{ $$ = make_cmd_call($2); }
 
 ;
 
@@ -89,7 +89,7 @@ expr:
 	| expr '+' expr    				{ $$ = make_binary_op($1,$3 ,'+'); }
   	| expr '-' expr     			{ $$ = make_binary_op($1,$3, '-'); }
 	| '-' expr %prec UMINUS 		{ $$ = make_op_uminus($2); }
-	| '(' expr ','  expr ')'		{ $$ = make_expr_parentheses_virgule($2, $4);}
+	| expr ','  expr 				{ $$ = make_expr_virgule($1, $3);}
 	| expr '*' expr     			{ $$ = make_binary_op($1, $3, '*');}
 	| expr '/' expr     			{ $$ = make_binary_op($1, $3, '/');}
 	| expr '^' expr     			{ $$ = make_binary_op($1, $3, '^');}
