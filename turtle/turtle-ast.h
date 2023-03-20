@@ -126,7 +126,7 @@ struct variable
 struct procedure
 {
 	char* name;
-	enum ast_kind kind;
+	enum ast_kind kind; //mettre ast_cmd
 	struct procedure* next;
 };
 

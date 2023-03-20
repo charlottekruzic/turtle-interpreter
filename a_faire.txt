@@ -13,7 +13,7 @@ A faire :
 — random qui prend deux paramètres qui indiquent les bornes de l’invervalle
 fermé où tirer un nombre au hasard.charlotte
 - vérification que le nom de variable n'existe pas déjà
-
+- comment faire un saut de ligne au début des commandes qui commence une ligne
 
 
 Trucs qui vont pas :

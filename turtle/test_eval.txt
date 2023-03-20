@@ -1,2 +1,2 @@
-proc JADE down
+proc JADE fw 2
 call JADE

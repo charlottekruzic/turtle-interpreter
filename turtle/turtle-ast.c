@@ -263,7 +263,7 @@ struct ast_node *make_cmd_call(struct ast_node *expr){
 
 void context_destroy(struct context *self)
 {
-	// Libérer la mémoire allouée
+	// Libérer la mémoire allouée variable
     struct variable* current_node = self->var_list;
     while (current_node != NULL)
     {
@@ -273,12 +273,12 @@ void context_destroy(struct context *self)
         current_node = next_node;
     }
 
-	// Libérer la mémoire allouée
+	// Libérer la mémoire allouée procedure
     struct procedure* current_node_procedure = self->proc_list;
     while (current_node_procedure != NULL)
     {
-		
         struct procedure* next_node = current_node_procedure->next;
+		free(current_node_procedure->name);
         free(current_node_procedure);
         current_node_procedure = next_node;
     }
@@ -427,7 +427,6 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			double var = does_variable_exist(node->u.name, ctx);
 			if(var==0){fprintf(stderr, "erreur la variable n'existe pas");}
 			return var;
-			//return ast_node_eval(node->does_procedure_exist(node->u.name, ctx), ctx);
 			break;
 		case KIND_EXPR_VALUE:
 			return node->u.value;
@@ -521,7 +520,8 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				default:
 					break;
 			case KIND_CMD_CALL:
-				ast_node_eval(node->children[0], ctx);
+				struct ast_node *proc = node->children[0];
+				//return ast_node_eval(does_procedure_exist(proc->u.name, ctx), ctx);
 				break;
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
