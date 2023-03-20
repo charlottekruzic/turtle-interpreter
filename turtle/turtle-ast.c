@@ -553,7 +553,12 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					return tan(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_RANDOM:
-					return random(ast_node_eval(node->children[0], ctx));
+					struct ast_node *parenthese = node->children[0];
+					struct ast_node *virgule = parenthese->children[0];
+					int min = ast_node_eval(virgule->children[0], ctx);
+					int max = ast_node_eval(virgule->children[1], ctx);
+					int random = min + rand() % (max+1 - min);
+					return random;
 					break;
 					
 				default:
