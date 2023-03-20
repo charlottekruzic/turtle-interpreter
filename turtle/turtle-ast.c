@@ -424,9 +424,10 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		switch (node->kind)
 		{
 		case KIND_EXPR_NAME:
-			
+			double var = does_variable_exist(node->u.name, ctx);
+			if(var==0){fprintf(stderr, "erreur la variable n'existe pas");}
+			return var;
 			//return ast_node_eval(node->does_procedure_exist(node->u.name, ctx), ctx);
-			return does_variable_exist(node->u.name, ctx);
 			break;
 		case KIND_EXPR_VALUE:
 			return node->u.value;
@@ -828,7 +829,6 @@ void ast_node_print(const struct ast_node *node)
 			fprintf(stdout, "\nproc ");
 			break;
 		case KIND_EXPR_BINOP:
-			ast_node_print(node->children[0]);
 			switch (node->u.op)
 			{
 			case '+':
@@ -855,6 +855,7 @@ void ast_node_print(const struct ast_node *node)
 		}
 		
 		// fprintf(stdout,"2\n");
+		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
 		ast_node_print(node->next);
 	}

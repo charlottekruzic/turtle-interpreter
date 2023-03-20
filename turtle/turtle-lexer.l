@@ -10,6 +10,8 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
+INTEGER 0|[1-9]{DIGIT}*
+DOUBLE 0\.{DIGIT}+|{INTEGER}.{DIGIT}+|{DIGIT}+
 CAPITAL [A-Z]
 
 %%
@@ -46,7 +48,7 @@ CAPITAL [A-Z]
 "tan"                   { return TAN; }
 "random"                { return RANDOM; }
 
-{DIGIT}+                { yylval.value = strtod(yytext, NULL); return VALUE; }
+{DOUBLE}                { yylval.value = strtod(yytext, NULL); return VALUE; }
 {CAPITAL}+              { yylval.name = strdup(yytext); return NAME; }  
 [\n\t ]*                /* whitespace */
 .                       { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
