@@ -99,6 +99,7 @@ expr:
 	| COS expr  					{ $$ = make_expr_cos($2); }
 	| TAN expr  					{ $$ = make_expr_tan($2); }
 	| RANDOM expr					{ $$ = make_expr_random($2); }
+	| '{' cmds '}'      			{ $$ = make_block_proc($2);}
 
 ;
 

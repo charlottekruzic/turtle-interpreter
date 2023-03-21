@@ -41,6 +41,8 @@ CAPITAL [A-Z]
 "^"                     { return '^'; }
 "("                     { return '('; }
 ")"                     { return ')'; }
+"{"                     { return '{'; }
+"}"                     { return '}'; }
 ","                     { return ','; }
 "sqrt"                  { return SQRT; }
 "sin"                   { return SIN; }

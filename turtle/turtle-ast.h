@@ -100,6 +100,7 @@ struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, 
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
 struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_block_cmds(struct ast_node *cmds);
 struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2);
 struct ast_node *make_cmd_call(struct ast_node *expr);
 

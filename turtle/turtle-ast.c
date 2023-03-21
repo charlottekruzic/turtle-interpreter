@@ -244,6 +244,23 @@ struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2){
 	return node;
 }
 
+struct ast_node *make_block_proc(struct ast_node *cmds){
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_BLOCK;
+	node->children_count = 1;
+	node->children[0] = cmds;
+	return node;
+}
+
+struct ast_node *make_block_cmds(struct ast_node *cmds)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_BLOCK;
+	node->children_count = 1;
+	node->children[0] = cmds;
+	return node;
+}
+
 struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2){
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_PROC;
@@ -751,6 +768,9 @@ void ast_node_print(const struct ast_node *node)
 		{
 			switch (node->kind)
 			{
+			case KIND_CMD_BLOCK:
+				fprintf(stderr,"laaaaa\n");
+				break;
 			case KIND_EXPR_UNOP:
 				fprintf(stdout, "-");
 				break;
