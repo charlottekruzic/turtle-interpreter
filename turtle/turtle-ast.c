@@ -476,13 +476,29 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				switch (node->u.cmd)
 				{
 				case CMD_FORWARD:
-				
-					fprintf(stdout, "\nfw %f", ast_node_eval(node->children[0], ctx));
-					// Avancer dans la direction de fw (trouver la nouvelle position et changer dans context)
-					/*****************/
+					double distance_forward = ast_node_eval(node->children[0], ctx);
+					double new_position_x_forward = ctx->x+distance_forward*cos((ctx->angle-90)*(PI/180));
+					double new_position_y_forward = ctx->y+distance_forward*sin((ctx->angle-90)*(PI/180));
+					ctx->x=new_position_x_forward;
+					ctx->y=new_position_y_forward;
+					if(ctx->up){
+						fprintf(stdout, "\nMoveTo %f %f", new_position_x_forward, new_position_y_forward);
+					}else{
+						fprintf(stdout, "\nLineTo %f %f", new_position_x_forward, new_position_y_forward);
+					}
 					break;
 				case CMD_BACKWARD:
-					ast_node_eval(node->children[0], ctx);
+					// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
+					double distance = ast_node_eval(node->children[0], ctx);
+					double new_position_x = ctx->x+distance*cos((ctx->angle-90)*(PI/180));//-180 pour bw ??
+					double new_position_y = ctx->y+distance*sin((ctx->angle-90)*(PI/180));
+					ctx->x=new_position_x;
+					ctx->y=new_position_y;
+					if(ctx->up){
+						fprintf(stdout, "\nMoveTo %f %f", new_position_x, new_position_y);
+					}else{
+						fprintf(stdout, "\nLineTo %f %f", new_position_x, new_position_y);
+					}
 					/*****************/
 					break;
 				case CMD_RIGHT:
@@ -637,13 +653,14 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_COLOR:
+
 			/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
 				node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
 				node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
 					fprintf(stderr, "mauvaise valeur expr color.\n");
 					exit(2);
 			}*/
-			/*****************/
+				fprintf(stdout,"\nColor %f %f %f", ast_node_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ast_node_eval(node->children[2], ctx));
 				break;
 			default:
 				break;

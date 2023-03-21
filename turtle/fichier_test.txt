@@ -21,3 +21,6 @@ print (3+2)
 fw sqrt(3)
 fw random(1, 3)
 
+
+proc JADE fw 2
+call JADE
