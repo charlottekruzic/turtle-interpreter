@@ -1,5 +1,12 @@
-repeat 100 {
-  right random(0, 360)
-  color random(0, 1), random(0, 1), random(0, 1)
-  forward 50
+proc JADE {
+    color 1 0 0
+    fw 100
+    right 120
+    color 1 0 1
+    fw 100
+    right 120
+    color 1 1 0
+    fw 100
+    right 120
 }
+call JADE

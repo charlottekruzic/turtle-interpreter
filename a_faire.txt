@@ -1,6 +1,6 @@
 - gérer les noms des couleurs -> se transforme en chiffres
-- commande  repeat print
-- commande  repeat eval
+- commande  repeat print                                                                        OK
+- commande  repeat eval                                                                         OK
 - procedure
 - erreur procedure si existe pas
 - redefinir une procedure ou une variable avec meme nom erreur (demander)
@@ -15,6 +15,11 @@
 - voir PI (demander)
 
 - mettre stdout
+- resoudre conflits et fuites memoire
+- virgule pour séparer les chiffre des couleurs
+- couleurs entre 0 et 1
+- does variable exist retourner un boolean et apres chercher la valeur
+- does procedure exist retourner un boolean et apres chercher la valeur
 
 Trucs qui vont pas :
 

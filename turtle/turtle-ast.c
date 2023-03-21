@@ -11,8 +11,6 @@
 #define SQRT2 1.41421356237309504880
 #define SQRT3 1.7320508075688772935
 
-
-
 struct ast_node *make_expr_value(double value)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -21,7 +19,7 @@ struct ast_node *make_expr_value(double value)
 	return node;
 }
 
-struct ast_node *make_expr_name(char* name)
+struct ast_node *make_expr_name(char *name)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_NAME;
@@ -235,20 +233,13 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 	return node;
 }
 
-struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2){
+struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SET;
 	node->children_count = 2;
 	node->children[0] = expr1;
 	node->children[1] = expr2;
-	return node;
-}
-
-struct ast_node *make_block_proc(struct ast_node *cmds){
-	struct ast_node *node = calloc(1, sizeof(struct ast_node));
-	node->kind = KIND_CMD_BLOCK;
-	node->children_count = 1;
-	node->children[0] = cmds;
 	return node;
 }
 
@@ -261,7 +252,8 @@ struct ast_node *make_block_cmds(struct ast_node *cmds)
 	return node;
 }
 
-struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2){
+struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_PROC;
 	node->children_count = 2;
@@ -270,7 +262,8 @@ struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2){
 	return node;
 }
 
-struct ast_node *make_cmd_call(struct ast_node *expr){
+struct ast_node *make_cmd_call(struct ast_node *expr)
+{
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_CALL;
 	node->children_count = 1;
@@ -281,42 +274,45 @@ struct ast_node *make_cmd_call(struct ast_node *expr){
 void context_destroy(struct context *self)
 {
 	// Libérer la mémoire allouée variable
-    struct variable* current_node = self->var_list;
-    while (current_node != NULL)
-    {
-		//fprintf(stderr, "\nvariable : %s", current_node->name);
-        struct variable* next_node = current_node->next;
-        free(current_node);
-        current_node = next_node;
-    }
+	struct variable *current_node = self->var_list;
+	while (current_node != NULL)
+	{
+		// fprintf(stderr, "\nvariable : %s", current_node->name);
+		struct variable *next_node = current_node->next;
+		free(current_node);
+		current_node = next_node;
+	}
 
 	// Libérer la mémoire allouée procedure
-    struct procedure* current_node_procedure = self->proc_list;
-    while (current_node_procedure != NULL)
-    {
-        struct procedure* next_node = current_node_procedure->next;
+	/*struct procedure* current_node_procedure = self->proc_list;
+	while (current_node_procedure != NULL)
+	{
+		struct procedure* next_node = current_node_procedure->next;
 		free(current_node_procedure->name);
-        free(current_node_procedure);
-        current_node_procedure = next_node;
-    }
+		free(current_node_procedure);
+		current_node_procedure = next_node;
+	}*/
 }
 
-
-void ast_node_destroy(struct ast_node *self){
-	//détruire les noeuds
-	if (self == NULL) {
-        return;
-    }
-    for (int i = 0; i < self->children_count; i++) {
-        ast_node_destroy(self->children[i]);
-    }
+void ast_node_destroy(struct ast_node *self)
+{
+	// détruire les noeuds
+	if (self == NULL)
+	{
+		return;
+	}
+	for (int i = 0; i < self->children_count; i++)
+	{
+		ast_node_destroy(self->children[i]);
+	}
 	ast_node_destroy(self->next);
 	free(self);
 }
 
 void ast_destroy(struct ast *self)
-{	
-	if(self==NULL){
+{
+	if (self == NULL)
+	{
 		return;
 	}
 	ast_node_destroy(self->unit);
@@ -326,88 +322,90 @@ void ast_destroy(struct ast *self)
  * context
  */
 
-void new_variable(char* name, double value, struct context *ctx){
-	//espace pour la variable
-	struct variable* new_node = calloc(1, sizeof(struct variable));
+void new_variable(char *name, double value, struct context *ctx)
+{
+	// espace pour la variable
+	struct variable *new_node = calloc(1, sizeof(struct variable));
 	new_node->name = name;
 	new_node->value = value;
 	new_node->next = NULL;
 
-	//ajout à la liste existante
+	// ajout à la liste existante
 	if (ctx->var_list == NULL)
-        {
-            ctx->var_list = new_node;
-        }
-        else
-        {
-            struct variable* current_node = ctx->var_list;
-            while (current_node->next != NULL)
-            {
-                current_node = current_node->next;
-            }
-            current_node->next = new_node;
-        }
+	{
+		ctx->var_list = new_node;
+	}
+	else
+	{
+		struct variable *current_node = ctx->var_list;
+		while (current_node->next != NULL)
+		{
+			current_node = current_node->next;
+		}
+		current_node->next = new_node;
+	}
 }
 
-double does_variable_exist(char* name, struct context *ctx){
+double does_variable_exist(char *name, struct context *ctx)
+{
 	// Parcours de la liste de variables
-    struct variable* current_node = ctx->var_list;
-    while (current_node != NULL)
-    {
-		if(strcmp(current_node->name, name)==0){
+	struct variable *current_node = ctx->var_list;
+	while (current_node != NULL)
+	{
+		if (strcmp(current_node->name, name) == 0)
+		{
 			printf("%s = %f\n", current_node->name, current_node->value);
 			return current_node->value;
 		}
-        current_node = current_node->next;
-    }
+		current_node = current_node->next;
+	}
 	return 0;
 }
 
-void new_procedure(char* name, enum ast_kind kind, struct context *ctx){
-	//espace pour la procedure
-	struct procedure* new_node = calloc(1, sizeof(struct procedure));
+void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
+{
+	// espace pour la procedure
+	struct procedure *new_node = calloc(1, sizeof(struct procedure));
 	new_node->name = name;
-	new_node->kind = kind;
+	new_node->nodes = node_child;
 	new_node->next = NULL;
 
-	//ajout à la liste existante
+	// ajout à la liste existante
 	if (ctx->proc_list == NULL)
-        {
-            ctx->proc_list = new_node;
-        }
-        else
-        {
-            struct procedure* current_node = ctx->proc_list;
-            while (current_node->next != NULL)
-            {
-                current_node = current_node->next;
-            }
-            current_node->next = new_node;
-        }
+	{
+		ctx->proc_list = new_node;
+	}
+	else
+	{
+		struct procedure *current_node = ctx->proc_list;
+		while (current_node->next != NULL)
+		{
+			current_node = current_node->next;
+		}
+		current_node->next = new_node;
+	}
 }
 
-enum ast_kind does_procedure_exist(char* name, struct context *ctx){
+struct ast_node* does_procedure_exist(char* name, struct context *ctx){
 	// Parcours de la liste de procedures
-    struct procedure* current_node = ctx->proc_list;
-    while (current_node != NULL)
-    {
+	struct procedure* current_node = ctx->proc_list;
+	while (current_node != NULL)
+	{
 		if(strcmp(current_node->name, name)==0){
 			//printf("%s\n", current_node->name);
-			return current_node->kind;
+			return current_node->nodes;
 		}
-        current_node = current_node->next;
-    }
-	return 0;
+		current_node = current_node->next;
+	}
+	return NULL;
 }
-
-
 
 void context_create(struct context *self)
 {
 	self->x = 0;
 	self->y = 0;
 	self->angle = 0;
-	self->up = false; 
+	self->up = false;
 	self->var_list = NULL;
 	new_variable("PI", PI, self);
 	new_variable("SQRT2", SQRT2, self);
@@ -420,8 +418,10 @@ void context_create(struct context *self)
  * eval
  */
 
-char* ast_node_char_eval(const struct ast_node *node, struct context *ctx){
-	if(node->kind == KIND_EXPR_NAME){
+char *ast_node_char_eval(const struct ast_node *node, struct context *ctx)
+{
+	if (node->kind == KIND_EXPR_NAME)
+	{
 		return node->u.name;
 	}
 	return "";
@@ -442,7 +442,10 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		{
 		case KIND_EXPR_NAME:
 			double var = does_variable_exist(node->u.name, ctx);
-			if(var==0){fprintf(stderr, "erreur la variable n'existe pas");}
+			if (var == 0)
+			{
+				fprintf(stderr, "erreur la variable n'existe pas");
+			}
 			return var;
 			break;
 		case KIND_EXPR_VALUE:
@@ -455,7 +458,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				ctx->x = 0;
 				ctx->y = 0;
 				ctx->angle = 0;
-				ctx->up = false; 
+				ctx->up = false;
 				break;
 			case CMD_UP:
 				ctx->up = true;
@@ -478,138 +481,158 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 	{
 		// fprintf(stdout,"1\n");
 
-		if (node->kind == KIND_EXPR_BLOCK)
+		switch (node->kind)
 		{
+		case KIND_EXPR_BLOCK:
 			return ast_node_eval(node->children[0], ctx); // revoir les priorité
-		}
-		else
-		{
-			switch (node->kind)
+		case KIND_CMD_BLOCK:
+			return ast_node_eval(node->children[0], ctx);
+			break;
+		case KIND_EXPR_UNOP:
+			return -ast_node_eval(node->children[0], ctx);
+			break;
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
 			{
-			case KIND_EXPR_UNOP:
-				return -ast_node_eval(node->children[0], ctx);
-				break;
-			case KIND_CMD_SIMPLE:
-				switch (node->u.cmd)
+			case CMD_FORWARD:
+				double distance_forward = ast_node_eval(node->children[0], ctx);
+				double new_position_x_forward = ctx->x + distance_forward * cos((ctx->angle - 90) * (PI / 180));
+				double new_position_y_forward = ctx->y + distance_forward * sin((ctx->angle - 90) * (PI / 180));
+				ctx->x = new_position_x_forward;
+				ctx->y = new_position_y_forward;
+				if (ctx->up)
 				{
-				case CMD_FORWARD:
-					double distance_forward = ast_node_eval(node->children[0], ctx);
-					double new_position_x_forward = ctx->x+distance_forward*cos((ctx->angle-90)*(PI/180));
-					double new_position_y_forward = ctx->y+distance_forward*sin((ctx->angle-90)*(PI/180));
-					ctx->x=new_position_x_forward;
-					ctx->y=new_position_y_forward;
-					if(ctx->up){
-						fprintf(stdout, "\nMoveTo %f %f", new_position_x_forward, new_position_y_forward);
-					}else{
-						fprintf(stdout, "\nLineTo %f %f", new_position_x_forward, new_position_y_forward);
-					}
-					break;
-				case CMD_BACKWARD:
-					// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
-					double distance = ast_node_eval(node->children[0], ctx);
-					double new_position_x = ctx->x-distance*cos((ctx->angle-90)*(PI/180));//-180 pour bw ??
-					double new_position_y = ctx->y-distance*sin((ctx->angle-90)*(PI/180));
-					ctx->x=new_position_x;
-					ctx->y=new_position_y;
-					if(ctx->up){
-						fprintf(stdout, "\nMoveTo %f %f", new_position_x, new_position_y);
-					}else{
-						fprintf(stdout, "\nLineTo %f %f", new_position_x, new_position_y);
-					}
-					/*****************/
-					break;
-				case CMD_RIGHT:
-					if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360) {
-						ctx->angle += ast_node_eval(node->children[0], ctx);
-					}else{
-						fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
-						exit(2);
-					}
-					break;
-				case CMD_LEFT:
-					if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360) {
-						ctx->angle -= ast_node_eval(node->children[0], ctx);
-					}else{
-						fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
-						exit(2);
-					}
-					break;
-				case CMD_HEADING:
-					if (node->children[0]->u.value < 360 && node->children[0]->u.value > 0) {
-						ctx->angle = ast_node_eval(node->children[0], ctx);
-					}else{
-						fprintf(stdout, "entrez un nombre compris entre 0 et 360\n");
-						exit(2);
-					}
-					break;
-				case CMD_PRINT:
-					fprintf(stdout, "\n");
-					ast_node_print(node->children[0]);
-					break;
-				default:
-					break;
+					fprintf(stdout, "\nMoveTo %f %f", new_position_x_forward, new_position_y_forward);
+				}
+				else
+				{
+					fprintf(stdout, "\nLineTo %f %f", new_position_x_forward, new_position_y_forward);
 				}
 				break;
-				default:
-					break;
-			case KIND_CMD_CALL:
-				struct ast_node *proc = node->children[0];
-				//return ast_node_eval(does_procedure_exist(proc->u.name, ctx), ctx);
-				break;
-			case KIND_EXPR_FUNC:
-				switch (node->u.func)
+			case CMD_BACKWARD:
+				// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
+				double distance = ast_node_eval(node->children[0], ctx);
+				double new_position_x = ctx->x - distance * cos((ctx->angle - 90) * (PI / 180)); //-180 pour bw ??
+				double new_position_y = ctx->y - distance * sin((ctx->angle - 90) * (PI / 180));
+				ctx->x = new_position_x;
+				ctx->y = new_position_y;
+				if (ctx->up)
 				{
-				case FUNC_SQRT:
-					if(node->children[0]->u.value >= 0){
-						return sqrt(ast_node_eval(node->children[0], ctx));
-					}else{
-						fprintf(stdout, "entrez un nombre supérieur à 0\n");
-						exit(2);
-					}
-					break;
-				case FUNC_SIN:
-					if (node->children[0]->u.value <= 90 && node->children[0]->u.value >= 0) {
-						return sin(ast_node_eval(node->children[0], ctx));
-					}else{
-						fprintf(stdout, "entrez un nombre compris entre 0 et 90\n");
-						exit(2);
-					}
-					break;
-				case FUNC_COS:
-					if (node->children[0]->u.value <= 180 && node->children[0]->u.value >= 0) {
-						return cos(ast_node_eval(node->children[0], ctx));
-					}else{
-						fprintf(stdout, "entrez un nombre compris entre 0 et 180\n");
-						exit(2);
-					}
-					break;
-				case FUNC_TAN:
-					return tan(ast_node_eval(node->children[0], ctx));
-					break;
-				case FUNC_RANDOM:
-					struct ast_node *parenthese = node->children[0];
-					struct ast_node *virgule = parenthese->children[0];
-					int min = ast_node_eval(virgule->children[0], ctx);
-					int max = ast_node_eval(virgule->children[1], ctx);
-					int random = min + rand() % (max+1 - min);
-					return random;
-					break;
-					
-				default:
-					break;
+					fprintf(stdout, "\nMoveTo %f %f", new_position_x, new_position_y);
 				}
+				else
+				{
+					fprintf(stdout, "\nLineTo %f %f", new_position_x, new_position_y);
+				}
+				/*****************/
+				break;
+			case CMD_RIGHT:
+				if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360)
+				{
+					ctx->angle += ast_node_eval(node->children[0], ctx);
+				}
+				else
+				{
+					fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+					exit(2);
+				}
+				break;
+			case CMD_LEFT:
+				if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360)
+				{
+					ctx->angle -= ast_node_eval(node->children[0], ctx);
+				}
+				else
+				{
+					fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+					exit(2);
+				}
+				break;
+			case CMD_HEADING:
+				if (node->children[0]->u.value < 360 && node->children[0]->u.value > 0)
+				{
+					ctx->angle = ast_node_eval(node->children[0], ctx);
+				}
+				else
+				{
+					fprintf(stdout, "entrez un nombre compris entre 0 et 360\n");
+					exit(2);
+				}
+				break;
+			case CMD_PRINT:
+				fprintf(stdout, "\n");
+				ast_node_print(node->children[0]);
+				break;
+			default:
 				break;
 			}
+			break;
+		default:
+			break;
+		case KIND_CMD_CALL:
+			struct ast_node *proc = node->children[0];
+			return ast_node_eval(does_procedure_exist(proc->u.name, ctx), ctx);
+			break;
+		case KIND_EXPR_FUNC:
+			switch (node->u.func)
+			{
+			case FUNC_SQRT:
+				if (node->children[0]->u.value >= 0)
+				{
+					return sqrt(ast_node_eval(node->children[0], ctx));
+				}
+				else
+				{
+					fprintf(stdout, "entrez un nombre supérieur à 0\n");
+					exit(2);
+				}
+				break;
+			case FUNC_SIN:
+				if (node->children[0]->u.value <= 90 && node->children[0]->u.value >= 0)
+				{
+					return sin(ast_node_eval(node->children[0], ctx));
+				}
+				else
+				{
+					fprintf(stdout, "entrez un nombre compris entre 0 et 90\n");
+					exit(2);
+				}
+				break;
+			case FUNC_COS:
+				if (node->children[0]->u.value <= 180 && node->children[0]->u.value >= 0)
+				{
+					return cos(ast_node_eval(node->children[0], ctx));
+				}
+				else
+				{
+					fprintf(stdout, "entrez un nombre compris entre 0 et 180\n");
+					exit(2);
+				}
+				break;
+			case FUNC_TAN:
+				return tan(ast_node_eval(node->children[0], ctx));
+				break;
+			case FUNC_RANDOM:
+				struct ast_node *parenthese = node->children[0];
+				struct ast_node *virgule = parenthese->children[0];
+				int min = ast_node_eval(virgule->children[0], ctx);
+				int max = ast_node_eval(virgule->children[1], ctx);
+				int random = min + rand() % (max + 1 - min);
+				return random;
+				break;
+
+			default:
+				break;
+			}
+			break;
 		}
-				
-			
 
 		ast_node_eval(node->next, ctx);
 	}
 
 	else if (node->children_count == 2)
 	{
-		
+
 		switch (node->kind)
 		{
 		case KIND_CMD_SET:
@@ -619,20 +642,22 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
-				ctx->x =ast_node_eval(node->children[0], ctx);
-				ctx->y =ast_node_eval(node->children[1], ctx);
+				ctx->x = ast_node_eval(node->children[0], ctx);
+				ctx->y = ast_node_eval(node->children[1], ctx);
 				break;
 			default:
 				break;
 			}
 			break;
 		case KIND_CMD_REPEAT:
-			/*****************/
-
+			int nb_repeat = ast_node_eval(node->children[0], ctx);
+			for (int i = 0; i < nb_repeat; i++)
+			{
+				ast_node_eval(node->children[1], ctx);
+			}
 			break;
 		case KIND_CMD_PROC:
-			new_procedure(ast_node_char_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ctx);
-
+			new_procedure(ast_node_char_eval(node->children[0], ctx), node->children[1], ctx);
 			break;
 		case KIND_EXPR_BINOP:
 			switch (node->u.op)
@@ -671,17 +696,16 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			{
 			case CMD_COLOR:
 
-			/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
-				node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
-				node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
-					fprintf(stderr, "mauvaise valeur expr color.\n");
-					exit(2);
-			}*/
-				fprintf(stdout,"\nColor %f %f %f", ast_node_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ast_node_eval(node->children[2], ctx));
+				/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
+					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
+					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
+						fprintf(stderr, "mauvaise valeur expr color.\n");
+						exit(2);
+				}*/
+				fprintf(stdout, "\nColor %f %f %f", ast_node_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ast_node_eval(node->children[2], ctx));
 				break;
 			default:
 				break;
-				
 			}
 			break;
 		default:
@@ -747,91 +771,102 @@ void ast_node_print(const struct ast_node *node)
 		default:
 			break;
 		}
-		if(node->next!=NULL){
+		if (node->next != NULL)
+		{
 			fprintf(stdout, "\n");
 		}
-		
+
 		ast_node_print(node->next);
 	}
 
 	else if (node->children_count == 1)
 	{
 		// fprintf(stdout,"1\n");
-
-		if (node->kind == KIND_EXPR_BLOCK)
+		switch (node->kind)
 		{
+		case KIND_EXPR_BLOCK:
 			fprintf(stdout, "(");
 			ast_node_print(node->children[0]);
 			fprintf(stdout, ")");
-		}
-		else
-		{
-			switch (node->kind)
+			break;
+		case KIND_CMD_BLOCK:
+			// fprintf(stderr,"nb children : %ld\n", node->children[0]->next->children[0]->children_count);
+			fprintf(stdout, "{\n");
+			ast_node_print(node->children[0]);
+			fprintf(stdout, "\n}");
+			break;
+		case KIND_EXPR_UNOP:
+			fprintf(stdout, "-");
+			ast_node_print(node->children[0]);
+			break;
+		case KIND_CMD_SIMPLE:
+			switch (node->u.cmd)
 			{
-			case KIND_CMD_BLOCK:
-				fprintf(stderr,"laaaaa\n");
+			case CMD_FORWARD:
+				fprintf(stdout, "fw ");
+				ast_node_print(node->children[0]);
 				break;
-			case KIND_EXPR_UNOP:
-				fprintf(stdout, "-");
+			case CMD_BACKWARD:
+				fprintf(stdout, "bw ");
+				ast_node_print(node->children[0]);
 				break;
-			case KIND_CMD_SIMPLE:
-				switch (node->u.cmd)
-				{
-				case CMD_FORWARD:
-					fprintf(stdout, "fw ");
-					break;
-				case CMD_BACKWARD:
-					fprintf(stdout, "bw ");
-					break;
-				case CMD_RIGHT:
-					fprintf(stdout, "right ");
-					break;
-				case CMD_LEFT:
-					fprintf(stdout, "left ");
-					break;
-				case CMD_HEADING:
-					fprintf(stdout, "hd ");
-					break;
-				case CMD_PRINT:
-					fprintf(stdout, "print ");
-					break;
-				default:
-					break;
-				}
+			case CMD_RIGHT:
+				fprintf(stdout, "right ");
+				ast_node_print(node->children[0]);
 				break;
-			case KIND_CMD_CALL:
-				fprintf(stdout, "call ");
+			case CMD_LEFT:
+				fprintf(stdout, "left ");
+				ast_node_print(node->children[0]);
 				break;
-			case KIND_EXPR_FUNC:
-				switch (node->u.func)
-				{
-				case FUNC_SQRT:
-					fprintf(stdout, "sqrt ");
-					break;
-				case FUNC_SIN:
-					fprintf(stdout, "sin ");
-					break;
-				case FUNC_COS:
-					fprintf(stdout, "cos ");
-					break;
-				case FUNC_TAN:
-					fprintf(stdout, "tan ");
-					break;
-				case FUNC_RANDOM:
-					fprintf(stdout, "random ");
-					break;
-				default:
-					break;
-				}
+			case CMD_HEADING:
+				fprintf(stdout, "hd ");
+				ast_node_print(node->children[0]);
+				break;
+			case CMD_PRINT:
+				fprintf(stdout, "print ");
+				ast_node_print(node->children[0]);
 				break;
 			default:
 				break;
 			}
-
+			break;
+		case KIND_CMD_CALL:
+			fprintf(stdout, "call ");
 			ast_node_print(node->children[0]);
+			break;
+		case KIND_EXPR_FUNC:
+			switch (node->u.func)
+			{
+			case FUNC_SQRT:
+				fprintf(stdout, "sqrt ");
+				ast_node_print(node->children[0]);
+				break;
+			case FUNC_SIN:
+				fprintf(stdout, "sin ");
+				ast_node_print(node->children[0]);
+				break;
+			case FUNC_COS:
+				fprintf(stdout, "cos ");
+				ast_node_print(node->children[0]);
+				break;
+			case FUNC_TAN:
+				fprintf(stdout, "tan ");
+				ast_node_print(node->children[0]);
+				break;
+			case FUNC_RANDOM:
+				fprintf(stdout, "random ");
+				ast_node_print(node->children[0]);
+				break;
+			default:
+				break;
+			}
+			break;
+		default:
+			break;
 		}
 
-		if(node->next!=NULL){
+		if (node->next != NULL)
+		{
 			fprintf(stdout, "\n");
 		}
 		ast_node_print(node->next);
@@ -839,19 +874,22 @@ void ast_node_print(const struct ast_node *node)
 
 	else if (node->children_count == 2)
 	{
-		
-		
+
 		switch (node->kind)
 		{
-		
+
 		case KIND_CMD_SET:
 			fprintf(stdout, "set ");
+			ast_node_print(node->children[0]);
+			ast_node_print(node->children[1]);
 			break;
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
 				fprintf(stdout, "pos ");
+				ast_node_print(node->children[0]);
+				ast_node_print(node->children[1]);
 				break;
 			default:
 				break;
@@ -859,8 +897,10 @@ void ast_node_print(const struct ast_node *node)
 			break;
 		case KIND_CMD_REPEAT:
 			fprintf(stdout, "repeat ");
+			ast_node_print(node->children[0]);
+			ast_node_print(node->children[1]);
 			break;
-		
+
 		/*case KIND_EXPR_BLOCK:
 			fprintf(stdout, "(");
 			ast_node_print(node->children[0]);
@@ -870,24 +910,36 @@ void ast_node_print(const struct ast_node *node)
 			break;*/
 		case KIND_CMD_PROC:
 			fprintf(stdout, "proc ");
+			ast_node_print(node->children[0]);
+			ast_node_print(node->children[1]);
 			break;
 		case KIND_EXPR_BINOP:
 			switch (node->u.op)
 			{
 			case '+':
+				ast_node_print(node->children[0]);
 				fprintf(stdout, "+ ");
+				ast_node_print(node->children[1]);
 				break;
 			case '-':
+				ast_node_print(node->children[0]);
 				fprintf(stdout, "- ");
+				ast_node_print(node->children[1]);
 				break;
 			case '*':
+				ast_node_print(node->children[0]);
 				fprintf(stdout, "* ");
+				ast_node_print(node->children[1]);
 				break;
 			case '/':
+				ast_node_print(node->children[0]);
 				fprintf(stdout, "/ ");
+				ast_node_print(node->children[1]);
 				break;
 			case ',':
+				ast_node_print(node->children[0]);
 				fprintf(stdout, ", ");
+				ast_node_print(node->children[1]);
 				break;
 			default:
 				break;
@@ -896,11 +948,10 @@ void ast_node_print(const struct ast_node *node)
 		default:
 			break;
 		}
-		
+
 		// fprintf(stdout,"2\n");
-		ast_node_print(node->children[0]);
-		ast_node_print(node->children[1]);
-		if(node->next!=NULL){
+		if (node->next != NULL)
+		{
 			fprintf(stdout, "\n");
 		}
 		ast_node_print(node->next);
@@ -929,7 +980,8 @@ void ast_node_print(const struct ast_node *node)
 		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
 		ast_node_print(node->children[2]);
-		if(node->next!=NULL){
+		if (node->next != NULL)
+		{
 			fprintf(stdout, "\n");
 		}
 		ast_node_print(node->next);
