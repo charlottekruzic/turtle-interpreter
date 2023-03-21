@@ -490,8 +490,8 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				case CMD_BACKWARD:
 					// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
 					double distance = ast_node_eval(node->children[0], ctx);
-					double new_position_x = ctx->x+distance*cos((ctx->angle-90)*(PI/180));//-180 pour bw ??
-					double new_position_y = ctx->y+distance*sin((ctx->angle-90)*(PI/180));
+					double new_position_x = ctx->x-distance*cos((ctx->angle-90)*(PI/180));//-180 pour bw ??
+					double new_position_y = ctx->y-distance*sin((ctx->angle-90)*(PI/180));
 					ctx->x=new_position_x;
 					ctx->y=new_position_y;
 					if(ctx->up){
@@ -716,13 +716,13 @@ void ast_node_print(const struct ast_node *node)
 			switch (node->u.cmd)
 			{
 			case CMD_HOME:
-				fprintf(stdout, "\nhome ");
+				fprintf(stdout, "home ");
 				break;
 			case CMD_UP:
-				fprintf(stdout, "\nup ");
+				fprintf(stdout, "up ");
 				break;
 			case CMD_DOWN:
-				fprintf(stdout, "\ndown ");
+				fprintf(stdout, "down ");
 				break;
 			default:
 				break;
@@ -730,7 +730,10 @@ void ast_node_print(const struct ast_node *node)
 		default:
 			break;
 		}
-
+		if(node->next!=NULL){
+			fprintf(stdout, "\n");
+		}
+		
 		ast_node_print(node->next);
 	}
 
@@ -755,44 +758,44 @@ void ast_node_print(const struct ast_node *node)
 				switch (node->u.cmd)
 				{
 				case CMD_FORWARD:
-					fprintf(stdout, "\nfw ");
+					fprintf(stdout, "fw ");
 					break;
 				case CMD_BACKWARD:
-					fprintf(stdout, "\nbw ");
+					fprintf(stdout, "bw ");
 					break;
 				case CMD_RIGHT:
-					fprintf(stdout, "\nright ");
+					fprintf(stdout, "right ");
 					break;
 				case CMD_LEFT:
-					fprintf(stdout, "\nleft ");
+					fprintf(stdout, "left ");
 					break;
 				case CMD_HEADING:
-					fprintf(stdout, "\nhd ");
+					fprintf(stdout, "hd ");
 					break;
 				case CMD_PRINT:
-					fprintf(stdout, "\nprint ");
+					fprintf(stdout, "print ");
 					break;
 				default:
 					break;
 				}
 				break;
 			case KIND_CMD_CALL:
-				fprintf(stdout, "\ncall ");
+				fprintf(stdout, "call ");
 				break;
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
 				{
 				case FUNC_SQRT:
-					fprintf(stdout, "\nsqrt ");
+					fprintf(stdout, "sqrt ");
 					break;
 				case FUNC_SIN:
-					fprintf(stdout, "\nsin ");
+					fprintf(stdout, "sin ");
 					break;
 				case FUNC_COS:
-					fprintf(stdout, "\ncos ");
+					fprintf(stdout, "cos ");
 					break;
 				case FUNC_TAN:
-					fprintf(stdout, "\ntan ");
+					fprintf(stdout, "tan ");
 					break;
 				case FUNC_RANDOM:
 					fprintf(stdout, "random ");
@@ -808,6 +811,9 @@ void ast_node_print(const struct ast_node *node)
 			ast_node_print(node->children[0]);
 		}
 
+		if(node->next!=NULL){
+			fprintf(stdout, "\n");
+		}
 		ast_node_print(node->next);
 	}
 
@@ -819,20 +825,20 @@ void ast_node_print(const struct ast_node *node)
 		{
 		
 		case KIND_CMD_SET:
-			fprintf(stdout, "\nset ");
+			fprintf(stdout, "set ");
 			break;
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
-				fprintf(stdout, "\npos ");
+				fprintf(stdout, "pos ");
 				break;
 			default:
 				break;
 			}
 			break;
 		case KIND_CMD_REPEAT:
-			fprintf(stdout, "\nrepeat ");
+			fprintf(stdout, "repeat ");
 			break;
 		
 		/*case KIND_EXPR_BLOCK:
@@ -843,7 +849,7 @@ void ast_node_print(const struct ast_node *node)
 			fprintf(stdout, ")");
 			break;*/
 		case KIND_CMD_PROC:
-			fprintf(stdout, "\nproc ");
+			fprintf(stdout, "proc ");
 			break;
 		case KIND_EXPR_BINOP:
 			switch (node->u.op)
@@ -874,6 +880,9 @@ void ast_node_print(const struct ast_node *node)
 		// fprintf(stdout,"2\n");
 		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
+		if(node->next!=NULL){
+			fprintf(stdout, "\n");
+		}
 		ast_node_print(node->next);
 	}
 
@@ -886,7 +895,7 @@ void ast_node_print(const struct ast_node *node)
 			switch (node->u.cmd)
 			{
 			case CMD_COLOR:
-				fprintf(stdout, "\ncolor ");
+				fprintf(stdout, "color ");
 				break;
 			default:
 				break;
@@ -900,6 +909,9 @@ void ast_node_print(const struct ast_node *node)
 		ast_node_print(node->children[0]);
 		ast_node_print(node->children[1]);
 		ast_node_print(node->children[2]);
+		if(node->next!=NULL){
+			fprintf(stdout, "\n");
+		}
 		ast_node_print(node->next);
 	}
 }

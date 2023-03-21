@@ -74,7 +74,7 @@ cmd:
 	| RIGHT	expr			{ $$ = make_cmd_right($2); }
 	| LEFT	expr			{ $$ = make_cmd_left($2); }
 	| HEADING expr			{ $$ = make_cmd_heading($2); }
-	| COLOR	expr expr expr	{ $$ = make_cmd_color($2,$3,$4); }
+	| COLOR	expr expr expr	{ $$ = make_cmd_color($2,$3,$4);}
 	| HOME					{ $$ = make_cmd_home(); }
 	| REPEAT expr cmd		{ $$ = make_cmd_repeat($2,$3); }
 	| SET expr expr			{ $$ = make_cmd_set($2,$3); }

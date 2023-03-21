@@ -1,34 +1,24 @@
-Demander :
-- est ce qu'on peut utiliser les opérateurs sans cmd avant ?
+- gérer les noms des couleurs -> se transforme en chiffres
+- commande  repeat print
+- commande  repeat eval
+- procedure
+- erreur procedure si existe pas
+- redefinir une procedure ou une variable avec meme nom erreur (demander)
+- mettre conditions de départ
+- faire toute les vérification
+- faire les commentaires
+- sortie du domaine de l'écran
+- opérateur priorité
+- comment faire un saut de ligne au début des commandes qui commence une ligne (avant next)
 
-A faire :
-- couleurs avec lettres
-- angles ?
-- commandes repeat jade
-- set jade
-- proc charlotte
-- call charlotte
-- expressions
-— soit un nom de variable ; charlotte
-— random qui prend deux paramètres qui indiquent les bornes de l’invervalle
-fermé où tirer un nombre au hasard.charlotte
-- vérification que le nom de variable n'existe pas déjà
-- comment faire un saut de ligne au début des commandes qui commence une ligne
+- tester caractere au lieu des chiffres
+- voir PI (demander)
 
+- mettre stdout
 
 Trucs qui vont pas :
-    - VALUE prend les chiffres et les lettre ensemble (forward marche avec une lettre apres)
-        -> ajouter des trucs comme expr et cmd ?? comment on peut dire que certain prennent entier 
-            et d'autres des nombres à virgule
-
-
-
 
 
 
 Questions :
-- attention priorités
-- %left '*'  ???
-- quel kind pour les parentheses
 - peut il y avoir une Variable = 0 ? car si on la trouve pas, on retourne 0
-- make_cmd_set on met dans cette fonction l'ajout de variable ?

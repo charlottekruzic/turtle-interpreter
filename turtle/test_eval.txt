@@ -1,8 +1,8 @@
 color 1 0 0
-bw 100
+fw 100
 right 120
 color 0 1 0
-bw 100
+fw 100
 right 120
 color 0 0 1
-bw 100
+fw 100
