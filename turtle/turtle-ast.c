@@ -202,7 +202,7 @@ struct ast_node *make_cmd_heading(struct ast_node *expr)
 	return node;
 }
 
-struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
+struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
@@ -211,6 +211,16 @@ struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, 
 	node->children[0] = expr1;
 	node->children[1] = expr2;
 	node->children[2] = expr3;
+	return node;
+}
+
+struct ast_node *make_cmd_color_name(struct ast_node *expr)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->kind = KIND_CMD_SIMPLE;
+	node->u.cmd = CMD_COLOR;
+	node->children_count = 1;
+	node->children[0] = expr;
 	return node;
 }
 
@@ -284,14 +294,14 @@ void context_destroy(struct context *self)
 	}
 
 	// Libérer la mémoire allouée procedure
-	/*struct procedure* current_node_procedure = self->proc_list;
+	struct procedure* current_node_procedure = self->proc_list;
 	while (current_node_procedure != NULL)
 	{
 		struct procedure* next_node = current_node_procedure->next;
 		free(current_node_procedure->name);
 		free(current_node_procedure);
 		current_node_procedure = next_node;
-	}*/
+	}
 }
 
 void ast_node_destroy(struct ast_node *self)
@@ -346,7 +356,22 @@ void new_variable(char *name, double value, struct context *ctx)
 	}
 }
 
-double does_variable_exist(char *name, struct context *ctx)
+bool does_variable_exist(char *name, struct context *ctx)
+{
+	// Parcours de la liste de variables
+	struct variable *current_node = ctx->var_list;
+	while (current_node != NULL)
+	{
+		if (strcmp(current_node->name, name) == 0)
+		{
+			return true;
+		}
+		current_node = current_node->next;
+	}
+	return false;
+}
+
+double find_variable(char *name, struct context *ctx)
 {
 	// Parcours de la liste de variables
 	struct variable *current_node = ctx->var_list;
@@ -369,11 +394,11 @@ void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
 	new_node->name = name;
 	new_node->nodes = node_child;
 	new_node->next = NULL;
-
 	// ajout à la liste existante
 	if (ctx->proc_list == NULL)
 	{
 		ctx->proc_list = new_node;
+		printf("création %s\n", name);
 	}
 	else
 	{
@@ -382,6 +407,7 @@ void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
 		{
 			current_node = current_node->next;
 		}
+		printf("création %s\n", name);
 		current_node->next = new_node;
 	}
 }
@@ -393,10 +419,12 @@ struct ast_node* does_procedure_exist(char* name, struct context *ctx){
 	{
 		if(strcmp(current_node->name, name)==0){
 			//printf("%s\n", current_node->name);
+			printf("appel %s\n", name);
 			return current_node->nodes;
 		}
 		current_node = current_node->next;
 	}
+	printf("pas trouve %s\n", name);
 	return NULL;
 }
 
@@ -442,12 +470,10 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		{
 		case KIND_EXPR_NAME:
 			{
-			double var = does_variable_exist(node->u.name, ctx);
-			if (var == 0)
-			{
+			if(!does_variable_exist(node->u.name, ctx)){
 				fprintf(stderr, "erreur la variable n'existe pas");
 			}
-			return var;
+			return find_variable(node->u.name, ctx);
 			}
 			break;
 		case KIND_EXPR_VALUE:
@@ -463,9 +489,11 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				ctx->up = false;
 				break;
 			case CMD_UP:
+				printf("ici");
 				ctx->up = true;
 				break;
 			case CMD_DOWN:
+				printf("la");
 				ctx->up = false;
 				break;
 			default:
@@ -499,17 +527,15 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			case CMD_FORWARD:
 				{
 				double distance_forward = ast_node_eval(node->children[0], ctx);
-				double new_position_x_forward = ctx->x + distance_forward * cos((ctx->angle - 90) * (PI / 180));
-				double new_position_y_forward = ctx->y + distance_forward * sin((ctx->angle - 90) * (PI / 180));
-				ctx->x = new_position_x_forward;
-				ctx->y = new_position_y_forward;
+				ctx->x = ctx->x + distance_forward * cos((ctx->angle - 90) * (PI / 180));
+				ctx->y = ctx->y + distance_forward * sin((ctx->angle - 90) * (PI / 180));
 				if (ctx->up)
 				{
-					fprintf(stdout, "\nMoveTo %f %f", new_position_x_forward, new_position_y_forward);
+					fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
 				}
 				else
 				{
-					fprintf(stdout, "\nLineTo %f %f", new_position_x_forward, new_position_y_forward);
+					fprintf(stdout, "\nLineTo %f %f", ctx->x, ctx->y);
 				}
 				}
 				break;
@@ -517,17 +543,15 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				{
 				// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
 				double distance = ast_node_eval(node->children[0], ctx);
-				double new_position_x = ctx->x - distance * cos((ctx->angle - 90) * (PI / 180)); //-180 pour bw ??
-				double new_position_y = ctx->y - distance * sin((ctx->angle - 90) * (PI / 180));
-				ctx->x = new_position_x;
-				ctx->y = new_position_y;
+				ctx->x = ctx->x - distance * cos((ctx->angle - 90) * (PI / 180));
+				ctx->y = ctx->y - distance * sin((ctx->angle - 90) * (PI / 180));
 				if (ctx->up)
 				{
-					fprintf(stdout, "\nMoveTo %f %f", new_position_x, new_position_y);
+					fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
 				}
 				else
 				{
-					fprintf(stdout, "\nLineTo %f %f", new_position_x, new_position_y);
+					fprintf(stdout, "\nLineTo %f %f", ctx->x, ctx->y);
 				}
 				/*****************/
 				}
@@ -555,13 +579,13 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				break;
 			case CMD_HEADING:
-				if (node->children[0]->u.value < 360 && node->children[0]->u.value > 0)
+				if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360)
 				{
 					ctx->angle = ast_node_eval(node->children[0], ctx);
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre compris entre 0 et 360\n");
+					fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
 					exit(2);
 				}
 				break;
@@ -577,8 +601,14 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			break;
 		case KIND_CMD_CALL:
 			{
-			struct ast_node *proc = node->children[0];
-			return ast_node_eval(does_procedure_exist(proc->u.name, ctx), ctx);
+			struct ast_node *name_proc = node->children[0];
+			struct ast_node* proc = does_procedure_exist(name_proc->u.name, ctx);
+			if(proc==NULL){
+				fprintf(stderr, "La procédure %s n'existe pas\n", name_proc->u.name);
+				exit(2);
+			}
+			ast_node_eval(proc, ctx);
+			return ast_node_eval(node->next, ctx);
 			}
 			break;
 		case KIND_EXPR_FUNC:
@@ -654,6 +684,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			case CMD_POSITION:
 				ctx->x = ast_node_eval(node->children[0], ctx);
 				ctx->y = ast_node_eval(node->children[1], ctx);
+				fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
 				break;
 			default:
 				break;
@@ -725,9 +756,9 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		}
 
 		// fprintf(stdout,"3\n");
-		ast_node_eval(node->children[0], ctx);
+		/*ast_node_eval(node->children[0], ctx);
 		ast_node_eval(node->children[1], ctx);
-		ast_node_eval(node->children[2], ctx);
+		ast_node_eval(node->children[2], ctx);*/
 		ast_node_eval(node->next, ctx);
 	}
 	return 0;

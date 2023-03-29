@@ -96,7 +96,8 @@ struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr
 struct ast_node *make_cmd_right(struct ast_node *expr);
 struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_heading(struct ast_node *expr);
-struct ast_node *make_cmd_color(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3);
+struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3);
+struct ast_node *make_cmd_color_name(struct ast_node *expr);
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
 struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2);
@@ -146,10 +147,11 @@ struct context
 };
 
 void new_variable(char* name, double value, struct context *ctx);
-double does_variable_exist(char* name, struct context *ctx);
+bool does_variable_exist(char* name, struct context *ctx);
+double find_variable(char* name, struct context *ctx);
 
-//void new_procedure(char* name, enum ast_kind kind, struct context *ctx);
-//enum ast_kind does_procedure_exist(char* name, struct context *ctx);
+void new_procedure(char *name, struct ast_node *node_child, struct context *ctx);
+struct ast_node* does_procedure_exist(char* name, struct context *ctx);
 
 // create an initial context
 void context_create(struct context *self);
