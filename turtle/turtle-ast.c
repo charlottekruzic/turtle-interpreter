@@ -441,9 +441,11 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		switch (node->kind)
 		{
 		case KIND_EXPR_NAME:
-			double var = does_variable_exist(node->u.name, ctx);
-			if(var==0){fprintf(stderr, "erreur la variable n'existe pas");}
-			return var;
+			{
+				double var = does_variable_exist(node->u.name, ctx);
+				if(var==0){fprintf(stderr, "erreur la variable n'existe pas");}
+				return var;
+			}
 			break;
 		case KIND_EXPR_VALUE:
 			return node->u.value;
@@ -493,18 +495,21 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				switch (node->u.cmd)
 				{
 				case CMD_FORWARD:
-					double distance_forward = ast_node_eval(node->children[0], ctx);
-					double new_position_x_forward = ctx->x+distance_forward*cos((ctx->angle-90)*(PI/180));
-					double new_position_y_forward = ctx->y+distance_forward*sin((ctx->angle-90)*(PI/180));
-					ctx->x=new_position_x_forward;
-					ctx->y=new_position_y_forward;
-					if(ctx->up){
-						fprintf(stdout, "\nMoveTo %f %f", new_position_x_forward, new_position_y_forward);
-					}else{
-						fprintf(stdout, "\nLineTo %f %f", new_position_x_forward, new_position_y_forward);
+					{
+						double distance_forward = ast_node_eval(node->children[0], ctx);
+						double new_position_x_forward = ctx->x+distance_forward*cos((ctx->angle-90)*(PI/180));
+						double new_position_y_forward = ctx->y+distance_forward*sin((ctx->angle-90)*(PI/180));
+						ctx->x=new_position_x_forward;
+						ctx->y=new_position_y_forward;
+						if(ctx->up){
+							fprintf(stdout, "\nMoveTo %f %f", new_position_x_forward, new_position_y_forward);
+						}else{
+							fprintf(stdout, "\nLineTo %f %f", new_position_x_forward, new_position_y_forward);
+						}
 					}
 					break;
 				case CMD_BACKWARD:
+					{
 					// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
 					double distance = ast_node_eval(node->children[0], ctx);
 					double new_position_x = ctx->x-distance*cos((ctx->angle-90)*(PI/180));//-180 pour bw ??
@@ -517,6 +522,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 						fprintf(stdout, "\nLineTo %f %f", new_position_x, new_position_y);
 					}
 					/*****************/
+					}
 					break;
 				case CMD_RIGHT:
 					if (node->children[0]->u.value < 360 && node->children[0]->u.value > -360) {
@@ -553,9 +559,11 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				default:
 					break;
 			case KIND_CMD_CALL:
+				{
 				struct ast_node *proc = node->children[0];
 				//return ast_node_eval(does_procedure_exist(proc->u.name, ctx), ctx);
 				break;
+				}
 			case KIND_EXPR_FUNC:
 				switch (node->u.func)
 				{
@@ -587,12 +595,14 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 					return tan(ast_node_eval(node->children[0], ctx));
 					break;
 				case FUNC_RANDOM:
+					{
 					struct ast_node *parenthese = node->children[0];
 					struct ast_node *virgule = parenthese->children[0];
 					int min = ast_node_eval(virgule->children[0], ctx);
 					int max = ast_node_eval(virgule->children[1], ctx);
 					int random = min + rand() % (max+1 - min);
 					return random;
+					}
 					break;
 					
 				default:
