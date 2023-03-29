@@ -65,26 +65,26 @@ cmds:
 ;
 
 cmd:
-	KW_PRINT expr			{ $$ = make_cmd_print($2); }
-	| KW_UP					{ $$ = make_cmd_up(); }
-	| KW_DOWN				{ $$ = make_cmd_down(); }
-	| KW_FORWARD expr   	{ $$ = make_cmd_forward($2); }
-	| KW_BACKWARD expr  	{ $$ = make_cmd_backward($2); }
-	| KW_POSITION expr expr { $$ = make_cmd_position($2,$3); }
-	| RIGHT	expr			{ $$ = make_cmd_right($2); }
-	| LEFT	expr			{ $$ = make_cmd_left($2); }
-	| HEADING expr			{ $$ = make_cmd_heading($2); }
-	| COLOR	expr expr expr	{ $$ = make_cmd_color($2,$3,$4);}
-	| HOME					{ $$ = make_cmd_home(); }
-	| REPEAT expr cmd		{ $$ = make_cmd_repeat($2,$3); }
-	| SET expr expr			{ $$ = make_cmd_set($2,$3); }
+	KW_PRINT expr			{ $$ = make_cmd_print($2); /*printf("print\n");*/}
+	| KW_UP					{ $$ = make_cmd_up(); /*printf("up\n")*/}
+	| KW_DOWN				{ $$ = make_cmd_down(); /*printf("down\n")*/}
+	| KW_FORWARD expr   	{ $$ = make_cmd_forward($2); /*printf("forward\n")*/}
+	| KW_BACKWARD expr  	{ $$ = make_cmd_backward($2); /*printf("backward\n")*/}
+	| KW_POSITION expr expr { $$ = make_cmd_position($2,$3); /*printf("position\n")*/}
+	| RIGHT	expr			{ $$ = make_cmd_right($2); /*printf("right\n")*/}
+	| LEFT	expr			{ $$ = make_cmd_left($2); /*printf("left\n")*/}
+	| HEADING expr			{ $$ = make_cmd_heading($2); /*printf("heading\n")*/}
+	| COLOR	expr expr expr	{ $$ = make_cmd_color($2,$3,$4);/*printf("color\n")*/}
+	| HOME					{ $$ = make_cmd_home(); /*printf("home\n")*/}
+	| REPEAT expr cmd		{ $$ = make_cmd_repeat($2,$3); /*printf("repeat\n")*/}
+	| SET expr expr			{ $$ = make_cmd_set($2,$3);/*printf("set\n")*/ }
 	| PROC expr cmd			{ $$ = make_cmd_proc($2,$3); }
 	| CALL expr 			{ $$ = make_cmd_call($2); }
-
-;
+	| '{' cmds '}'      	{ $$ = make_block_cmds($2); /*printf("block\n")*/}
+	
 
 expr:
-    VALUE             				{ $$ = make_expr_value($1);}
+    VALUE             				{ $$ = make_expr_value($1); /*printf("value %f\n", $1);*/}
 	| NAME           				{ $$ = make_expr_name($1);}
 	| expr '+' expr    				{ $$ = make_binary_op($1,$3 ,'+'); }
   	| expr '-' expr     			{ $$ = make_binary_op($1,$3, '-'); }
@@ -99,7 +99,6 @@ expr:
 	| COS expr  					{ $$ = make_expr_cos($2); }
 	| TAN expr  					{ $$ = make_expr_tan($2); }
 	| RANDOM expr					{ $$ = make_expr_random($2); }
-	| '{' cmds '}'      			{ $$ = make_block_proc($2);}
 
 ;
 

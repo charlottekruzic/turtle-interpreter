@@ -127,7 +127,7 @@ struct variable
 struct procedure
 {
 	char* name;
-	enum ast_kind kind; //mettre ast_cmd
+	struct ast_node* nodes;
 	struct procedure* next;
 };
 
@@ -148,8 +148,8 @@ struct context
 void new_variable(char* name, double value, struct context *ctx);
 double does_variable_exist(char* name, struct context *ctx);
 
-void new_procedure(char* name, enum ast_kind kind, struct context *ctx);
-enum ast_kind does_procedure_exist(char* name, struct context *ctx);
+//void new_procedure(char* name, enum ast_kind kind, struct context *ctx);
+//enum ast_kind does_procedure_exist(char* name, struct context *ctx);
 
 // create an initial context
 void context_create(struct context *self);
