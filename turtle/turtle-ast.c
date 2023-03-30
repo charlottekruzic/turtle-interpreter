@@ -11,6 +11,14 @@
 #define SQRT2 1.41421356237309504880
 #define SQRT3 1.7320508075688772935
 
+/**
+*
+* Allocates and initializes a new AST node representing a numerical value in an expression.
+*
+* @param expr The expression representing a value
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_value(double value)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -19,6 +27,14 @@ struct ast_node *make_expr_value(double value)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a variable name in an expression.
+*
+* @param expr The expression representing a name
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_name(char *name)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -27,6 +43,14 @@ struct ast_node *make_expr_name(char *name)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a parentheses expression in an expression.
+*
+* @param expr The expression representing the block in parentheses
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_parentheses(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -36,6 +60,14 @@ struct ast_node *make_expr_parentheses(struct ast_node *expr)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a square root function call in an expression.
+*
+* @param expr The expression to which the square root function is applied
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_sqrt(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -45,6 +77,15 @@ struct ast_node *make_expr_sqrt(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+
+/**
+*
+* Allocates and initializes a new AST node representing a sin function call in an expression.
+*
+* @param expr The expression to which the sin function is applied
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_sin(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -54,6 +95,15 @@ struct ast_node *make_expr_sin(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+
+/**
+*
+* Allocates and initializes a new AST node representing a cos function call in an expression.
+*
+* @param expr The expression to which the cos function is applied
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_cos(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -63,6 +113,15 @@ struct ast_node *make_expr_cos(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+
+/**
+*
+* Allocates and initializes a new AST node representing a tan function call in an expression.
+*
+* @param expr The expression to which the tan function is applied
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_tan(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -73,6 +132,14 @@ struct ast_node *make_expr_tan(struct ast_node *expr)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a random function call in an expression.
+*
+* @param expr The expression to which the random function is applied
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_random(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -83,6 +150,14 @@ struct ast_node *make_expr_random(struct ast_node *expr)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a comma operator call in an expression.
+*
+* @param expr1
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -94,6 +169,15 @@ struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a binary operation call in an expression.
+*
+* @param expr1 The first argument expression
+* @param expr2 
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *right_expr, char binary_op)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -105,6 +189,14 @@ struct ast_node *make_binary_op(struct ast_node *left_expr, struct ast_node *rig
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing a unary minus operation call in an expression.
+*
+* @param expr
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_op_uminus(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -115,6 +207,14 @@ struct ast_node *make_op_uminus(struct ast_node *expr)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing the "print" command, with the given expression
+*
+* @param expr
+*
+* @return a pointer to the newly created AST node
+*/
 struct ast_node *make_cmd_print(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -125,6 +225,13 @@ struct ast_node *make_cmd_print(struct ast_node *expr)
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing the "up" command
+*
+*@return a pointer to the newly created AST node.
+*
+*/
 struct ast_node *make_cmd_up()
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -134,6 +241,13 @@ struct ast_node *make_cmd_up()
 	return node;
 }
 
+/**
+*
+* Allocates and initializes a new AST node representing the "down" command
+*
+*@return a pointer to the newly created AST node.
+*
+*/
 struct ast_node *make_cmd_down()
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -143,6 +257,12 @@ struct ast_node *make_cmd_down()
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing the "forward" command with the given expression.
+ *
+ * @param expr The expression representing the distance to move forward.
+ * @return A pointer to the newly created AST node.
+ */
 struct ast_node *make_cmd_forward(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -153,6 +273,12 @@ struct ast_node *make_cmd_forward(struct ast_node *expr)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing the "backward" command with the given expression.
+ *
+ * @param expr The expression representing the distance to move backward.
+ * @return A pointer to the newly created AST node.
+ */
 struct ast_node *make_cmd_backward(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -163,6 +289,13 @@ struct ast_node *make_cmd_backward(struct ast_node *expr)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing the "position" command with two arguments.
+ *
+ * @param expr1 The first argument expression.
+ * @param expr2 The second argument expression.
+ * @return A pointer to the newly created AST node.
+ */
 struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -174,6 +307,14 @@ struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing the "right" command with
+ * the given expression as its argument.
+ *
+ * @param expr The AST node representing the expression to be used as the argument to the left command
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_right(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -183,6 +324,15 @@ struct ast_node *make_cmd_right(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+
+/**
+ * Allocates and initializes a new AST node representing the "left" command with
+ * the given expression as its argument.
+ *
+ * @param expr The AST node representing the expression to be used as the argument to the left command
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_left(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -192,6 +342,14 @@ struct ast_node *make_cmd_left(struct ast_node *expr)
 	node->children[0] = expr;
 	return node;
 }
+
+/**
+ * Allocates and initializes a new AST node for a "heading" command with the given expression as its argument.
+ * 
+ * @param expr The expression representing the heading value
+ * 
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_heading(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -202,6 +360,15 @@ struct ast_node *make_cmd_heading(struct ast_node *expr)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing a "color" command with three arguments.
+ *
+ * @param expr1 The AST node representing the red color value (0-255)
+ * @param expr2 The AST node representing the green color value (0-255)
+ * @param expr3 The AST node representing the blue color value (0-255)
+ *
+ * @return A pointer to the new AST node
+ */
 struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -214,6 +381,14 @@ struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing a command to set pen color
+ * based on a color name.
+ *
+ * @param expr The AST node representing the color name expression
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_color_name(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -224,6 +399,11 @@ struct ast_node *make_cmd_color_name(struct ast_node *expr)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing the "home" command without any arguments.
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_home()
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -233,6 +413,14 @@ struct ast_node *make_cmd_home()
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing the "repeat" command with the given number
+ * of repetitions and command to repeat.
+ *
+ * @param expr1 The expression representing the number of times to repeat the command
+ * @param expr2 The command to repeat
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -243,6 +431,14 @@ struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node for the "set" command with two expressions.
+ * 
+ * @param expr1 The first expression representing the variable name
+ * @param expr2 The second expression representing the value to set
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -253,6 +449,13 @@ struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing a block of commands.
+ *
+ * @param cmds The AST node representing the sequence of commands to be executed in the block
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_block_cmds(struct ast_node *cmds)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -262,6 +465,14 @@ struct ast_node *make_block_cmds(struct ast_node *cmds)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node for a procedure definition command.
+ *
+ * @param expr1 The identifier node for the procedure name
+ * @param expr2 The block of command nodes for the procedure body
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -272,6 +483,13 @@ struct ast_node *make_cmd_proc(struct ast_node *expr1, struct ast_node *expr2)
 	return node;
 }
 
+/**
+ * Allocates and initializes a new AST node representing a procedure call command.
+ * 
+ * @param expr The expression node representing the name of the procedure to call
+ *
+ * @return A pointer to the newly created AST node
+ */
 struct ast_node *make_cmd_call(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
@@ -281,6 +499,11 @@ struct ast_node *make_cmd_call(struct ast_node *expr)
 	return node;
 }
 
+/**
+* Frees the memory allocated for the context, including all variables and procedures.
+
+* @param self A pointer to the context to be destroyed
+*/
 void context_destroy(struct context *self)
 {
 	// Libérer la mémoire allouée variable
@@ -304,6 +527,11 @@ void context_destroy(struct context *self)
 	}
 }
 
+/**
+* Recursively destroys an AST node and all of its children.
+*
+* @param self A pointer to the AST node to destroy
+*/
 void ast_node_destroy(struct ast_node *self)
 {
 	// détruire les noeuds
@@ -319,6 +547,11 @@ void ast_node_destroy(struct ast_node *self)
 	free(self);
 }
 
+/**
+* Destroys an abstract syntax tree by recursively deleting all its nodes.
+*
+* @param self A pointer to the abstract syntax tree to destroy
+*/
 void ast_destroy(struct ast *self)
 {
 	if (self == NULL)
@@ -332,6 +565,13 @@ void ast_destroy(struct ast *self)
  * context
  */
 
+/**
+* Adds a new variable to the context with the given name and value.
+
+* @param name The name of the variable
+* @param value The value to be assigned to the variable
+* @param ctx The context in which to add the variable
+*/
 void new_variable(char *name, double value, struct context *ctx)
 {
 	// espace pour la variable
@@ -356,6 +596,14 @@ void new_variable(char *name, double value, struct context *ctx)
 	}
 }
 
+/**
+* Checks whether a variable with the given name exists in the context.
+*
+* @param name The name of the variable to check
+* @param ctx The context in which to check for the variable
+*
+* @return True if a variable with the given name exists in the context, false otherwise
+*/
 bool does_variable_exist(char *name, struct context *ctx)
 {
 	// Parcours de la liste de variables
@@ -371,6 +619,14 @@ bool does_variable_exist(char *name, struct context *ctx)
 	return false;
 }
 
+/**
+* Searches for the value of a variable with a given name in the context's variable list.
+*
+* @param name The name of the variable to search for
+* @param ctx A pointer to the context containing the variable list
+*
+* @return The value of the variable if found, or 0 if the variable does not exist
+*/
 double find_variable(char *name, struct context *ctx)
 {
 	// Parcours de la liste de variables
@@ -387,6 +643,13 @@ double find_variable(char *name, struct context *ctx)
 	return 0;
 }
 
+/**
+* Creates a new procedure in the given context with the given name and nodes.
+*
+* @param name The name of the procedure to be created
+* @param node_child The AST node representing the nodes of the procedure
+* @param ctx The context in which to create the procedure
+*/
 void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
 {
 	// espace pour la procedure
@@ -412,6 +675,16 @@ void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
 	}
 }
 
+/**
+ * Searches for a procedure with the given name in the context's procedure list.
+ * If found, returns a pointer to the root node of the procedure's AST.
+ * Otherwise, returns NULL.
+ *
+ * @param name The name of the procedure to search for.
+ * @param ctx A pointer to the context containing the procedure list.
+ *
+ * @return A pointer to the root node of the procedure's AST if found, otherwise NULL.
+ */
 struct ast_node* does_procedure_exist(char* name, struct context *ctx){
 	// Parcours de la liste de procedures
 	struct procedure* current_node = ctx->proc_list;
@@ -428,6 +701,11 @@ struct ast_node* does_procedure_exist(char* name, struct context *ctx){
 	return NULL;
 }
 
+/**
+* Initializes a new context with default values and pre-defined variables.
+*
+* @param self A pointer to the context to be initialized
+*/
 void context_create(struct context *self)
 {
 	self->x = 0;
@@ -446,6 +724,15 @@ void context_create(struct context *self)
  * eval
  */
 
+/**
+* Evaluates the value of an AST node that represents a character, such as a variable name.
+* If the node does not represent a character, an empty string is returned.
+*
+* @param node The AST node to be evaluated
+* @param ctx The context in which the node is evaluated
+*
+* @return The evaluated value of the AST node as a character string
+*/
 char *ast_node_char_eval(const struct ast_node *node, struct context *ctx)
 {
 	if (node->kind == KIND_EXPR_NAME)
@@ -455,6 +742,14 @@ char *ast_node_char_eval(const struct ast_node *node, struct context *ctx)
 	return "";
 }
 
+/**
+ * Evaluates an AST node and returns the result.
+ *
+ * @param node The AST node to evaluate
+ * @param ctx The execution context
+ *
+ * @return The result of the evaluation
+ */
 double ast_node_eval(const struct ast_node *node, struct context *ctx)
 {
 	if (node == NULL)
@@ -764,6 +1059,14 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 	return 0;
 }
 
+/**
+ * Evaluates the given Abstract Syntax Tree (AST) node and prints the result to stdout.
+ * 
+ * @param self A pointer to the AST node to be evaluated
+ * @param ctx A pointer to the context struct that contains the current state of the evaluation
+ * 
+ * @return void
+ */
 void ast_eval(const struct ast *self, struct context *ctx)
 {
 	if (self == NULL)
@@ -776,6 +1079,13 @@ void ast_eval(const struct ast *self, struct context *ctx)
 
 /*
  * print
+ */
+
+ /**
+ * This function recursively prints the contents of an AST to stdout.
+ * It takes a pointer to the root node of the AST as input.
+ *
+ * @param node The AST node to print
  */
 void ast_node_print(const struct ast_node *node)
 {
@@ -1031,6 +1341,11 @@ void ast_node_print(const struct ast_node *node)
 	}
 }
 
+/**
+ * Prints an abstract syntax tree to stdout
+ *
+ * @self pointer to the root node of the abstract syntax tree to print
+ */
 void ast_print(const struct ast *self)
 {
 	if (self == NULL)
