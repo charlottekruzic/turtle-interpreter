@@ -710,14 +710,14 @@ void context_create(struct context *self)
 }
 
 /**
-* Evaluates the value of an AST node that represents a character, such as a variable name.
-* If the node does not represent a character, an empty string is returned.
+* Evaluate the value of a node that represents a string
 *
-* @param node The AST node to be evaluated
-* @param ctx The context in which the node is evaluated
+* @param node the ast node to be evaluated
+* @param ctx the execution context in which the node is evaluated
 *
-* @return The evaluated value of the AST node as a character string
+* @return the value of the node if it's contain a name, an empty string otherwise
 */
+
 char *ast_node_char_eval(const struct ast_node *node, struct context *ctx)
 {
 	if (node->kind == KIND_EXPR_NAME)
@@ -728,30 +728,28 @@ char *ast_node_char_eval(const struct ast_node *node, struct context *ctx)
 }
 
 /**
- * Evaluates an AST node and returns the result.
+ * Evaluate an ast node
  *
- * @param node The AST node to evaluate
- * @param ctx The execution context
+ * @param node the ast node to evaluate
+ * @param ctx the execution context
  *
- * @return The result of the evaluation
+ * @return the result of the evaluation
  */
 double ast_node_eval(const struct ast_node *node, struct context *ctx)
 {
 	if (node == NULL)
 	{
-		// fprintf(stdout,"null\n");
 		return 0;
 	}
 
 	if (node->children_count == 0)
 	{
-		// fprintf(stdout,"0\n");
 		switch (node->kind)
 		{
 		case KIND_EXPR_NAME:
 			{
 			if(!does_variable_exist(node->u.name, ctx)){
-				fprintf(stderr, "erreur la variable n'existe pas");
+				fprintf(stderr, "Error ! Variable does not exist.");
 			}
 			return find_variable(node->u.name, ctx);
 			}
@@ -787,12 +785,11 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 
 	else if (node->children_count == 1)
 	{
-		// fprintf(stdout,"1\n");
 
 		switch (node->kind)
 		{
 		case KIND_EXPR_BLOCK:
-			return ast_node_eval(node->children[0], ctx); // revoir les priorité
+			return ast_node_eval(node->children[0], ctx);
 		case KIND_CMD_BLOCK:
 			return ast_node_eval(node->children[0], ctx);
 			break;
@@ -808,16 +805,9 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
 				break;
 			case CMD_COLOR:
-				/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
-					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
-					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
-						fprintf(stderr, "mauvaise valeur expr color.\n");
-						exit(2);
-				}*/
 				struct ast_node *child = node->children[0];
-				fprintf(stdout,"\nnb child : %ld",child->children_count);
 				
-
+				//If the color was given by name
 				if(child->children_count==0){
 					char* the_color = child->u.name;
 					double c1 = 0.0;
@@ -861,12 +851,18 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 						c2 = 1.0;
 						c3 = 1.0;
 					}else{
-						//free(the_color);
-						fprintf(stderr,"La couleur n'existe pas");
+						fprintf(stderr,"Error ! The color does not exist.");
 					}
-					//free(the_color);
 					fprintf(stdout, "\nColor %f %f %f", c1, c2, c3);
-				}else{
+				}
+				//If the color was given by three doubles
+				else{
+					/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
+					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
+					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
+						fprintf(stderr, "mauvaise valeur expr color.\n");
+						exit(2);
+					}*/
 					
 					struct ast_node *firstcolor = child->children[0]->children[0];
 					struct ast_node *secondcolor = child->children[0]->children[1];
@@ -891,7 +887,6 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				break;
 			case CMD_BACKWARD:
 				{
-				// METTRE DANS LE SENS INVERSE POUR QUE CA RECULE !!!!
 				double distance = ast_node_eval(node->children[0], ctx);
 				ctx->x = ctx->x - distance * cos((ctx->angle - 90) * (PI / 180));
 				ctx->y = ctx->y - distance * sin((ctx->angle - 90) * (PI / 180));
@@ -903,7 +898,6 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				{
 					fprintf(stdout, "\nLineTo %f %f", ctx->x, ctx->y);
 				}
-				/*****************/
 				}
 				break;
 			case CMD_RIGHT:
@@ -913,7 +907,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+					fprintf(stdout, "Error ! The angle to go right must be between -360° and 360°\n");
 					exit(2);
 				}
 				break;
@@ -924,7 +918,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+					fprintf(stdout, "Error ! The angle to go left must be between -360° and 360°\n");
 					exit(2);
 				}
 				break;
@@ -935,7 +929,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre compris entre -360 et 360\n");
+					fprintf(stdout, "Error ! The absolute angle must be between -360° and 360°\n");
 					exit(2);
 				}
 				break;
@@ -954,7 +948,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			struct ast_node *name_proc = node->children[0];
 			struct ast_node* proc = does_procedure_exist(name_proc->u.name, ctx);
 			if(proc==NULL){
-				fprintf(stderr, "La procédure %s n'existe pas\n", name_proc->u.name);
+				fprintf(stderr, "Error ! Procedure %s does not exist.\n", name_proc->u.name);
 				exit(2);
 			}
 			ast_node_eval(proc, ctx);
@@ -971,7 +965,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre supérieur à 0\n");
+					fprintf(stdout, "Error ! The sqrt function only takes positive or null numbers.\n");
 					exit(2);
 				}
 				break;
@@ -982,7 +976,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre compris entre 0 et 90\n");
+					fprintf(stdout, "Error! The sin function only takes angles between 0° and 90°\n");
 					exit(2);
 				}
 				break;
@@ -993,7 +987,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				}
 				else
 				{
-					fprintf(stdout, "entrez un nombre compris entre 0 et 180\n");
+					fprintf(stdout, "Error! The cos function only takes angles between 0° and 180°\n");
 					exit(2);
 				}
 				break;
@@ -1028,18 +1022,6 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		case KIND_CMD_SET:
 			new_variable(ast_node_char_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ctx);
 			break;
-		/*case KIND_CMD_SIMPLE:
-			switch (node->u.cmd)
-			{
-			case CMD_POSITION:
-				ctx->x = ast_node_eval(node->children[0], ctx);
-				ctx->y = ast_node_eval(node->children[1], ctx);
-				fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
-				break;
-			default:
-				break;
-			}
-			break;*/
 		case KIND_CMD_REPEAT:
 			{
 			int nb_repeat = ast_node_eval(node->children[0], ctx);
@@ -1075,45 +1057,17 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			break;
 		}
 
-		// fprintf(stdout,"2\n");
 		ast_node_eval(node->next, ctx);
 	}
-
-	/*else if (node->children_count == 3)
-	{
-
-		switch (node->kind)
-		{
-		case KIND_CMD_SIMPLE:
-			switch (node->u.cmd)
-			{
-			case CMD_COLOR:
-				fprintf(stdout, "\nColor %f %f %f", ast_node_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ast_node_eval(node->children[2], ctx));
-				break;
-			default:
-				break;
-			}
-			break;
-		default:
-			break;
-		}
-
-		// fprintf(stdout,"3\n");
-		//ast_node_eval(node->children[0], ctx);
-		//ast_node_eval(node->children[1], ctx);
-		//ast_node_eval(node->children[2], ctx);
-		//ast_node_eval(node->next, ctx);
-	}*/
 	return 0;
 }
 
 /**
- * Evaluates the given Abstract Syntax Tree (AST) node and prints the result to stdout.
+ * Evaluate all ast node and the ast
  * 
- * @param self A pointer to the AST node to be evaluated
- * @param ctx A pointer to the context struct that contains the current state of the evaluation
+ * @param self the abstract syntax tree to be evaluated
+ * @param ctx the execution context
  * 
- * @return void
  */
 void ast_eval(const struct ast *self, struct context *ctx)
 {
@@ -1125,27 +1079,22 @@ void ast_eval(const struct ast *self, struct context *ctx)
 	fprintf(stdout, "\n");
 }
 
-/*
- * print
- */
 
  /**
- * This function recursively prints the contents of an AST to stdout.
- * It takes a pointer to the root node of the AST as input.
+  * 
+ * Print recursively the contents of an ast node to stdout
  *
- * @param node The AST node to print
+ * @param node the ast node to print
  */
 void ast_node_print(const struct ast_node *node)
 {
 	if (node == NULL)
 	{
-		// fprintf(stdout,"null\n");
 		return;
 	}
 
 	if (node->children_count == 0)
 	{
-		// fprintf(stdout,"0\n");
 		switch (node->kind)
 		{
 		case KIND_EXPR_VALUE:
@@ -1182,7 +1131,6 @@ void ast_node_print(const struct ast_node *node)
 
 	else if (node->children_count == 1)
 	{
-		// fprintf(stdout,"1\n");
 		switch (node->kind)
 		{
 		case KIND_EXPR_BLOCK:
@@ -1191,7 +1139,6 @@ void ast_node_print(const struct ast_node *node)
 			fprintf(stdout, ")");
 			break;
 		case KIND_CMD_BLOCK:
-			// fprintf(stderr,"nb children : %ld\n", node->children[0]->next->children[0]->children_count);
 			fprintf(stdout, "{\n");
 			ast_node_print(node->children[0]);
 			fprintf(stdout, "\n}");
@@ -1292,31 +1239,11 @@ void ast_node_print(const struct ast_node *node)
 			ast_node_print(node->children[0]);
 			ast_node_print(node->children[1]);
 			break;
-		/*case KIND_CMD_SIMPLE:
-			switch (node->u.cmd)
-			{
-			case CMD_POSITION:
-				fprintf(stdout, "pos ");
-				ast_node_print(node->children[0]);
-				ast_node_print(node->children[1]);
-				break;
-			default:
-				break;
-			}
-			break;*/
 		case KIND_CMD_REPEAT:
 			fprintf(stdout, "repeat ");
 			ast_node_print(node->children[0]);
 			ast_node_print(node->children[1]);
 			break;
-
-		/*case KIND_EXPR_BLOCK:
-			fprintf(stdout, "(");
-			ast_node_print(node->children[0]);
-			fprintf(stdout, ",");
-			ast_node_print(node->children[1]);
-			fprintf(stdout, ")");
-			break;*/
 		case KIND_CMD_PROC:
 			fprintf(stdout, "proc ");
 			ast_node_print(node->children[0]);
@@ -1357,50 +1284,18 @@ void ast_node_print(const struct ast_node *node)
 		default:
 			break;
 		}
-
-		// fprintf(stdout,"2\n");
 		if (node->next != NULL)
 		{
 			fprintf(stdout, "\n");
 		}
 		ast_node_print(node->next);
 	}
-
-	/*else if (node->children_count == 3)
-	{
-
-		switch (node->kind)
-		{
-		case KIND_CMD_SIMPLE:
-			switch (node->u.cmd)
-			{
-			case CMD_COLOR:
-				fprintf(stdout, "color ");
-				break;
-			default:
-				break;
-			}
-			break;
-		default:
-			break;
-		}
-
-		// fprintf(stdout,"3\n");
-		ast_node_print(node->children[0]);
-		ast_node_print(node->children[1]);
-		ast_node_print(node->children[2]);
-		if (node->next != NULL)
-		{
-			fprintf(stdout, "\n");
-		}
-		ast_node_print(node->next);
-	}*/
 }
 
 /**
- * Prints an abstract syntax tree to stdout
+ * Print an abstract syntax tree and its nodes to stdout
  *
- * @self pointer to the root node of the abstract syntax tree to print
+ * @param self the root node of the abstract syntax tree to print
  */
 void ast_print(const struct ast *self)
 {
