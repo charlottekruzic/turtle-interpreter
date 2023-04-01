@@ -1,3 +1,4 @@
+/*Jade GURNAUD and Charlotte KRUZIC*/
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -16,7 +17,7 @@ CAPITAL [A-Z]
 COLOR_NAME red|green|blue|cyan|magenta|yellow|black|gray|white
 
 %%
-
+"#".*                   /* nothing */
 "print"                 { return KW_PRINT; }
 "up"                    { return KW_UP; }
 "down"                  { return KW_DOWN; }
@@ -35,9 +36,6 @@ COLOR_NAME red|green|blue|cyan|magenta|yellow|black|gray|white
 "+"                     { return '+'; }
 "-"                     { return '-'; }
 "*"                     { return '*'; }
-
-"#".*                   /* nothing */
-
 "/"                     { return '/'; }
 "^"                     { return '^'; }
 "("                     { return '('; }

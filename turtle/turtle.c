@@ -1,3 +1,4 @@
+//Jade GURNAUD and Charlotte KRUZIC
 #include <assert.h>
 #include <stdlib.h>
 #include <time.h>

@@ -1,3 +1,4 @@
+//Jade GURNAUD and Charlotte KRUZIC
 #include "turtle-ast.h"
 
 #include <assert.h>
@@ -158,7 +159,7 @@ struct ast_node *make_expr_random(struct ast_node *expr)
 *
 * @return a pointer to the newly created AST node
 */
-struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr2)
+struct ast_node *make_expr_one_virgule(struct ast_node *expr1, struct ast_node *expr2)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_EXPR_BINOP;
@@ -166,6 +167,17 @@ struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr
 	node->children_count = 2;
 	node->children[0] = expr1;
 	node->children[1] = expr2;
+	return node;
+}
+
+
+struct ast_node *make_expr_two_virgule(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
+{
+	struct ast_node *node = calloc(1, sizeof(struct ast_node));
+	node->children_count = 3;
+	node->children[0] = expr1;
+	node->children[1] = expr2;
+	node->children[1] = expr3;
 	return node;
 }
 
@@ -296,14 +308,13 @@ struct ast_node *make_cmd_backward(struct ast_node *expr)
  * @param expr2 The second argument expression.
  * @return A pointer to the newly created AST node.
  */
-struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr2)
+struct ast_node *make_cmd_position(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
 	node->u.cmd = CMD_POSITION;
-	node->children_count = 2;
-	node->children[0] = expr1;
-	node->children[1] = expr2;
+	node->children_count = 1;
+	node->children[0] = expr;
 	return node;
 }
 
@@ -369,7 +380,7 @@ struct ast_node *make_cmd_heading(struct ast_node *expr)
  *
  * @return A pointer to the new AST node
  */
-struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
+/*struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
@@ -379,7 +390,7 @@ struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *
 	node->children[1] = expr2;
 	node->children[2] = expr3;
 	return node;
-}
+}*/
 
 /**
  * Allocates and initializes a new AST node representing a command to set pen color
@@ -389,7 +400,7 @@ struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *
  *
  * @return A pointer to the newly created AST node
  */
-struct ast_node *make_cmd_color_name(struct ast_node *expr)
+struct ast_node *make_cmd_color(struct ast_node *expr)
 {
 	struct ast_node *node = calloc(1, sizeof(struct ast_node));
 	node->kind = KIND_CMD_SIMPLE;
@@ -521,7 +532,6 @@ void context_destroy(struct context *self)
 	while (current_node_procedure != NULL)
 	{
 		struct procedure* next_node = current_node_procedure->next;
-		free(current_node_procedure->name);
 		free(current_node_procedure);
 		current_node_procedure = next_node;
 	}
@@ -542,6 +552,9 @@ void ast_node_destroy(struct ast_node *self)
 	for (int i = 0; i < self->children_count; i++)
 	{
 		ast_node_destroy(self->children[i]);
+	}
+	if(self->kind==KIND_EXPR_NAME){
+		free(self->u.name);
 	}
 	ast_node_destroy(self->next);
 	free(self);
@@ -661,7 +674,6 @@ void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
 	if (ctx->proc_list == NULL)
 	{
 		ctx->proc_list = new_node;
-		printf("création %s\n", name);
 	}
 	else
 	{
@@ -670,7 +682,6 @@ void new_procedure(char *name, struct ast_node *node_child, struct context *ctx)
 		{
 			current_node = current_node->next;
 		}
-		printf("création %s\n", name);
 		current_node->next = new_node;
 	}
 }
@@ -692,7 +703,6 @@ struct ast_node* does_procedure_exist(char* name, struct context *ctx){
 	{
 		if(strcmp(current_node->name, name)==0){
 			//printf("%s\n", current_node->name);
-			printf("appel %s\n", name);
 			return current_node->nodes;
 		}
 		current_node = current_node->next;
@@ -784,11 +794,9 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				ctx->up = false;
 				break;
 			case CMD_UP:
-				printf("ici");
 				ctx->up = true;
 				break;
 			case CMD_DOWN:
-				printf("la");
 				ctx->up = false;
 				break;
 			default:
@@ -819,6 +827,78 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
+			case CMD_POSITION:
+				ctx->x = ast_node_eval(node->children[0]->children[0], ctx);
+				ctx->y = ast_node_eval(node->children[0]->children[1], ctx);
+				fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
+				break;
+			case CMD_COLOR:
+				/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
+					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
+					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
+						fprintf(stderr, "mauvaise valeur expr color.\n");
+						exit(2);
+				}*/
+				struct ast_node *child = node->children[0];
+				fprintf(stdout,"\nnb child : %ld",child->children_count);
+				
+
+				if(child->children_count==0){
+					char* the_color = child->u.name;
+					double c1 = 0.0;
+					double c2 = 0.0;
+					double c3 = 0.0;
+
+					if(strcmp(the_color,"red")==0){
+						c1 = 1.0; 
+						c2 = 0.0;
+						c3 = 0.0;
+					}else if(strcmp(the_color,"green")==0){
+						c1 = 0.0; 
+						c2 = 1.0;
+						c3 = 0.0;
+					}else if(strcmp(the_color,"blue")==0){
+						c1 = 0.0; 
+						c2 = 0.0;
+						c3 = 1.0;
+					}else if(strcmp(the_color,"cyan")==0){
+						c1 = 0.0; 
+						c2 = 1.0;
+						c3 = 1.0;
+					}else if(strcmp(the_color,"magenta")==0){
+						c1 = 1.0; 
+						c2 = 0.0;
+						c3 = 1.0;
+					}else if(strcmp(the_color,"yellow")==0){
+						c1 = 1.0; 
+						c2 = 1.0;
+						c3 = 0.0;
+					}else if(strcmp(the_color,"black")==0){
+						c1 = 0.0; 
+						c2 = 0.0;
+						c3 = 0.0;
+					}else if(strcmp(the_color,"gray")==0){
+						c1 = 0.5; 
+						c2 = 0.5;
+						c3 = 0.5;
+					}else if(strcmp(the_color,"white")==0){
+						c1 = 1.0; 
+						c2 = 1.0;
+						c3 = 1.0;
+					}else{
+						//free(the_color);
+						fprintf(stderr,"La couleur n'existe pas");
+					}
+					//free(the_color);
+					fprintf(stdout, "\nColor %f %f %f", c1, c2, c3);
+				}else{
+					
+					struct ast_node *firstcolor = child->children[0]->children[0];
+					struct ast_node *secondcolor = child->children[0]->children[1];
+					struct ast_node *thirdcolor = child->children[1];
+					fprintf(stdout, "\nColor %f %f %f", ast_node_eval(firstcolor, ctx), ast_node_eval(secondcolor, ctx), ast_node_eval(thirdcolor, ctx));
+				}
+				break;
 			case CMD_FORWARD:
 				{
 				double distance_forward = ast_node_eval(node->children[0], ctx);
@@ -973,7 +1053,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		case KIND_CMD_SET:
 			new_variable(ast_node_char_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ctx);
 			break;
-		case KIND_CMD_SIMPLE:
+		/*case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
@@ -984,7 +1064,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			default:
 				break;
 			}
-			break;
+			break;*/
 		case KIND_CMD_REPEAT:
 			{
 			int nb_repeat = ast_node_eval(node->children[0], ctx);
@@ -1024,7 +1104,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		ast_node_eval(node->next, ctx);
 	}
 
-	else if (node->children_count == 3)
+	/*else if (node->children_count == 3)
 	{
 
 		switch (node->kind)
@@ -1033,13 +1113,6 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 			switch (node->u.cmd)
 			{
 			case CMD_COLOR:
-
-				/*if (node->children[0]->u.value < 0 || node->children[0]->u.value > 255 ||
-					node->children[1]->u.value < 0 || node->children[1]->u.value > 255 ||
-					node->children[2]->u.value < 0 || node->children[2]->u.value > 255) {
-						fprintf(stderr, "mauvaise valeur expr color.\n");
-						exit(2);
-				}*/
 				fprintf(stdout, "\nColor %f %f %f", ast_node_eval(node->children[0], ctx), ast_node_eval(node->children[1], ctx), ast_node_eval(node->children[2], ctx));
 				break;
 			default:
@@ -1051,11 +1124,11 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		}
 
 		// fprintf(stdout,"3\n");
-		/*ast_node_eval(node->children[0], ctx);
-		ast_node_eval(node->children[1], ctx);
-		ast_node_eval(node->children[2], ctx);*/
-		ast_node_eval(node->next, ctx);
-	}
+		//ast_node_eval(node->children[0], ctx);
+		//ast_node_eval(node->children[1], ctx);
+		//ast_node_eval(node->children[2], ctx);
+		//ast_node_eval(node->next, ctx);
+	}*/
 	return 0;
 }
 
@@ -1155,6 +1228,14 @@ void ast_node_print(const struct ast_node *node)
 		case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
+			case CMD_POSITION:
+				fprintf(stdout, "pos ");
+				ast_node_print(node->children[0]);
+				break;
+			case CMD_COLOR:
+				fprintf(stdout, "color ");
+				ast_node_print(node->children[0]);
+				break;
 			case CMD_FORWARD:
 				fprintf(stdout, "fw ");
 				ast_node_print(node->children[0]);
@@ -1236,7 +1317,7 @@ void ast_node_print(const struct ast_node *node)
 			ast_node_print(node->children[0]);
 			ast_node_print(node->children[1]);
 			break;
-		case KIND_CMD_SIMPLE:
+		/*case KIND_CMD_SIMPLE:
 			switch (node->u.cmd)
 			{
 			case CMD_POSITION:
@@ -1247,7 +1328,7 @@ void ast_node_print(const struct ast_node *node)
 			default:
 				break;
 			}
-			break;
+			break;*/
 		case KIND_CMD_REPEAT:
 			fprintf(stdout, "repeat ");
 			ast_node_print(node->children[0]);
@@ -1310,7 +1391,7 @@ void ast_node_print(const struct ast_node *node)
 		ast_node_print(node->next);
 	}
 
-	else if (node->children_count == 3)
+	/*else if (node->children_count == 3)
 	{
 
 		switch (node->kind)
@@ -1338,7 +1419,7 @@ void ast_node_print(const struct ast_node *node)
 			fprintf(stdout, "\n");
 		}
 		ast_node_print(node->next);
-	}
+	}*/
 }
 
 /**

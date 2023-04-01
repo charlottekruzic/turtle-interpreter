@@ -1,3 +1,4 @@
+//Jade GURNAUD and Charlotte KRUZIC
 #ifndef TURTLE_AST_H
 #define TURTLE_AST_H
 
@@ -69,7 +70,7 @@ struct ast_node
 	struct ast_node *next;						 // the next node in the sequence
 };
 
-// TODO: make some constructors to use in parser.y
+// Expressions
 struct ast_node *make_expr_value(double value);
 struct ast_node *make_expr_name(char* name);
 struct ast_node *make_expr_parentheses(struct ast_node *expr);
@@ -78,26 +79,24 @@ struct ast_node *make_expr_sin(struct ast_node *expr);
 struct ast_node *make_expr_cos(struct ast_node *expr);
 struct ast_node *make_expr_tan(struct ast_node *expr);
 struct ast_node *make_expr_random(struct ast_node *expr);
-struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_expr_one_virgule(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_expr_two_virgule(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3);
 
 // Operators
-
 struct ast_node *make_op_uminus(struct ast_node *node);
 struct ast_node *make_binary_op(struct ast_node *left_node, struct ast_node *right_node, char operator);
 
 // Commandes
-
 struct ast_node *make_cmd_print(struct ast_node *expr);
 struct ast_node *make_cmd_up();
 struct ast_node *make_cmd_down();
 struct ast_node *make_cmd_forward(struct ast_node *expr);
 struct ast_node *make_cmd_backward(struct ast_node *expr);
-struct ast_node *make_cmd_position(struct ast_node *expr1, struct ast_node *expr2);
+struct ast_node *make_cmd_position(struct ast_node *expr);
 struct ast_node *make_cmd_right(struct ast_node *expr);
 struct ast_node *make_cmd_left(struct ast_node *expr);
 struct ast_node *make_cmd_heading(struct ast_node *expr);
-struct ast_node *make_cmd_color_number(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3);
-struct ast_node *make_cmd_color_name(struct ast_node *expr);
+struct ast_node *make_cmd_color(struct ast_node *expr);
 struct ast_node *make_cmd_home();
 struct ast_node *make_cmd_repeat(struct ast_node *expr1, struct ast_node *expr2);
 struct ast_node *make_cmd_set(struct ast_node *expr1, struct ast_node *expr2);
@@ -111,13 +110,12 @@ struct ast
 	struct ast_node *unit;
 };
 
-// do not forget to destroy properly! no leaks allowed!
+// memory release
 void ast_node_destroy(struct ast_node *self);
 void ast_destroy(struct ast *self);
 
-// the execution context
 
-
+// the variable
 struct variable
 {
 	char* name;
@@ -125,6 +123,7 @@ struct variable
 	struct variable* next;
 };
 
+// the procedure
 struct procedure
 {
 	char* name;
@@ -132,7 +131,7 @@ struct procedure
 	struct procedure* next;
 };
 
-
+// the execution context
 struct context
 {
 	double x;
@@ -141,15 +140,14 @@ struct context
 	bool up;
 	struct variable* var_list;
 	struct procedure* proc_list;
-
-	// TODO: add procedure handling
-	// TODO: add variable handling
 };
 
+//variables management
 void new_variable(char* name, double value, struct context *ctx);
 bool does_variable_exist(char* name, struct context *ctx);
 double find_variable(char* name, struct context *ctx);
 
+//procedures management
 void new_procedure(char *name, struct ast_node *node_child, struct context *ctx);
 struct ast_node* does_procedure_exist(char* name, struct context *ctx);
 

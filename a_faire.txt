@@ -1,7 +1,5 @@
-- gérer les noms des couleurs -> se transforme en chiffres
 - commande  repeat print
 - commande  repeat eval
-- procedure
 - erreur procedure si existe pas
 - redefinir une procedure ou une variable avec meme nom erreur (demander)
 - mettre conditions de départ
