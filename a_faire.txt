@@ -1,22 +1,16 @@
 - commande  repeat print
 - commande  repeat eval
-- erreur procedure si existe pas
-- redefinir une procedure ou une variable avec meme nom erreur (demander)
-- mettre conditions de départ
-- faire toute les vérification
-- faire les commentaires
-- sortie du domaine de l'écran
-- opérateur priorité
-- comment faire un saut de ligne au début des commandes qui commence une ligne (avant next)
 
+
+
+
+
+
+- mettre stdout ou err en fonction
+
+
+AJOUTER LES VÉRIFICATIONS
 - tester caractere au lieu des chiffres
-- voir PI (demander)
-
-- mettre stdout
-
-Trucs qui vont pas :
-
-
-
-Questions :
-- peut il y avoir une Variable = 0 ? car si on la trouve pas, on retourne 0
+- faire toute les vérification
+- redefinir une procedure ou une variable avec meme nom erreur
+- erreur procedure si existe pas
