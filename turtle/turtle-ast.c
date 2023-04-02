@@ -789,6 +789,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				fprintf(stdout, "\nMoveTo %f %f", ctx->x, ctx->y);
 				break;
 			case CMD_COLOR:
+				{
 				struct ast_node *child = node->children[0];
 
 				// If the color was given by name
@@ -873,6 +874,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 						exit(2);
 					}
 					fprintf(stdout, "\nColor %f %f %f", firstcolor, secondcolor, thirdcolor);
+				}
 				}
 				break;
 			case CMD_FORWARD:
@@ -1030,6 +1032,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		switch (node->kind)
 		{
 		case KIND_CMD_SET:
+			{
 			struct ast_node* name_var = node->children[0];
 			struct ast_node* value = node->children[1];
 			if(does_variable_exist(name_var->u.name, ctx)){
@@ -1037,6 +1040,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				exit(2);
 			}
 			new_variable(ast_node_char_eval(name_var, ctx), ast_node_eval(value, ctx), ctx);
+			}
 			break;
 		case KIND_CMD_REPEAT:
 		{
@@ -1052,6 +1056,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 		}
 		break;
 		case KIND_CMD_PROC:
+			{
 			struct ast_node* name_proc = node->children[0];
 			struct ast_node* commands = node->children[1];
 			if(does_procedure_exist(name_proc->u.name, ctx)){
@@ -1059,6 +1064,7 @@ double ast_node_eval(const struct ast_node *node, struct context *ctx)
 				exit(2);
 			}
 			new_procedure(ast_node_char_eval(name_proc, ctx), commands, ctx);
+			}
 			break;
 		case KIND_EXPR_BINOP:
 			switch (node->u.op)
