@@ -1,7 +1,8 @@
 - commande  repeat print
 - commande  repeat eval
 
-
+- pas appeler procédure dans une autre
+- vérifier qu'on peut pas appeler fw 2, 3 par exemple
 
 
 

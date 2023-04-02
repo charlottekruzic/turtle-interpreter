@@ -1,26 +1,2 @@
-color 1 0 0
-fw (10+5)
-right 120
-color 0 1 0
-fw 100
-right 10-2
-color 0 0 1
-fw 20/2
-right 120
-bw 10*4
-down
-heading 45
-up
-pos 10 5
-repeat 2 fw 100
-home
-fw sin(23)
-bw cos(12)
-fw tan(-2)
-print (3+2)
-fw sqrt(3)
-fw random(1, 3)
-
-
-proc JADE fw 2
-call JADE
+set AZ 1000
+fw AZ

@@ -79,8 +79,7 @@ struct ast_node *make_expr_sin(struct ast_node *expr);
 struct ast_node *make_expr_cos(struct ast_node *expr);
 struct ast_node *make_expr_tan(struct ast_node *expr);
 struct ast_node *make_expr_random(struct ast_node *expr);
-struct ast_node *make_expr_one_virgule(struct ast_node *expr1, struct ast_node *expr2);
-struct ast_node *make_expr_two_virgule(struct ast_node *expr1, struct ast_node *expr2, struct ast_node *expr3);
+struct ast_node *make_expr_virgule(struct ast_node *expr1, struct ast_node *expr2);
 
 // Operators
 struct ast_node *make_op_uminus(struct ast_node *node);

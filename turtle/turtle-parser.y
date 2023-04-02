@@ -46,12 +46,12 @@ void yyerror(struct ast *ret, const char *);
 %token				CALL		"call"
 
 //Operator precedence and associativity rules
-%right UMINUS
+%left UMINUS
 %left '^'
 %left '*' '/'
 %left '+' '-'
 %left ','
-%right RANDOM
+%left RANDOM
 
 
 %type <node> unit cmds cmd expr
@@ -96,7 +96,7 @@ expr:
 	| expr '/' expr     			{ $$ = make_binary_op($1, $3, '/');}
 	| expr '+' expr    				{ $$ = make_binary_op($1,$3 ,'+'); }
   	| expr '-' expr     			{ $$ = make_binary_op($1,$3, '-'); }
-	| expr ','  expr 				{ $$ = make_expr_one_virgule($1, $3);}
+	| expr ','  expr 				{ $$ = make_expr_virgule($1, $3);}
 	| '(' expr ')'      			{ $$ = make_expr_parentheses($2);}
 	| SQRT '(' expr ')'  			{ $$ = make_expr_sqrt($3); }
 	| SIN '(' expr ')'  			{ $$ = make_expr_sin($3); }

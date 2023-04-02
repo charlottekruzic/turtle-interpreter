@@ -11,9 +11,9 @@
 %option warn 8bit nodefault noyywrap
 
 DIGIT [0-9]
-INTEGER -?[1-9]{DIGIT}*|0
-DOUBLE {INTEGER}\.{DIGIT}+|{INTEGER}|0\.{DIGIT}+
-CAPITAL [A-Z]
+INTEGER 0|[1-9]{DIGIT}*
+DOUBLE {INTEGER}?\.{DIGIT}*|{DIGIT}?(\.{DIGIT}*)?[eE][-+]?{INTEGER}|{INTEGER}
+VAR_PROC_NAME [A-Z]([A-Z]|[0-9])*
 COLOR_NAME red|green|blue|cyan|magenta|yellow|black|gray|white
 
 %%
@@ -50,7 +50,7 @@ COLOR_NAME red|green|blue|cyan|magenta|yellow|black|gray|white
 "random"                { return RANDOM; }
 
 {DOUBLE}                { yylval.value = strtod(yytext, NULL); return VALUE; }
-{CAPITAL}+              { yylval.name = strdup(yytext); return NAME; }
+{VAR_PROC_NAME}         { yylval.name = strdup(yytext); return NAME; }
 {COLOR_NAME}            { yylval.name = strdup(yytext); return NAME; }  
 [\n\t ]*                /* whitespace */
 .                       { fprintf(stderr, "Unknown token: '%s'\n", yytext); exit(EXIT_FAILURE); }
