@@ -1,4 +1,5 @@
 # Turtle language interpreter & viewer
+[![License: MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg)](https://opensource.org/licenses/MIT)
 
 This project implements a simple interpreter for a Logo-inspired Turtle language, capable of parsing `.turtle` files and producing vector drawing commands. It is composed of two main parts:
 
@@ -28,8 +29,6 @@ turtle-interpreter/
 ```
 > 🔧 The viewer binary `turtle-viewer` is **already compiled and provided**, but its [full source code](src/turtle-viewer.cc) is available if needed.
 
----
-
 ## ⚙️ Build Instructions
 ### Requirements
 
@@ -54,7 +53,6 @@ To run an example:
 ```
 > 💡 The interpreter outputs drawing instructions to stdout, which the viewer consumes from stdin.
 
-
 ## 🎮 Contrôles dans le visualiseur
 - `Escape`: Exit the viewer
 - `F`: Toggle fullscreen
@@ -62,32 +60,10 @@ To run an example:
 - `Right Arrow`: Step forward in drawing
 - `Left Arrow`: Step backward in drawing
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 📸 Preview
 ![Demo](./ressources/demo.gif)
 
-## Project assignment
+## 📝 Project assignment
 For more information about the purpose of this project, you can find the [complete project assignment file](./ressources/project-assignment-fr.pdf) (in french) within this repository. This project is part of the third-year Bachelor's degree in Computer Science at the University of Franche-Comté.
 
 ## 👩‍💻 Contributors
