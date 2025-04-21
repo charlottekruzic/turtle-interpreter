@@ -1,2 +1,0 @@
-set AZ 1000
-fw AZ
