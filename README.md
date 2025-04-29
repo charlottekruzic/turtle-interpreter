@@ -13,7 +13,7 @@ turtle-interpreter/
 │ ├── castle.turtle
 │ ├── hello.turtle
 │ └── ... 
-├── ressources/ # Additional resources
+├── resources/ # Additional resources
 │ ├── demo.gif
 │ └── project-assignment-fr.pdf
 ├── src/  # Main source code for the project
@@ -61,10 +61,10 @@ To run an example:
 - `Left Arrow`: Step backward in drawing
 
 ## 📸 Preview
-![Demo](./ressources/demo.gif)
+![Demo](./resources/demo.gif)
 
 ## 📝 Project assignment
-For more information about the purpose of this project, you can find the [complete project assignment file](./ressources/project-assignment-fr.pdf) (in french) within this repository. This project is part of the third-year Bachelor's degree in Computer Science at the University of Franche-Comté.
+For more information about the purpose of this project, you can find the [complete project assignment file](./resources/project-assignment-fr.pdf) (in french) within this repository. This project is part of the third-year Bachelor's degree in Computer Science at the University of Franche-Comté.
 
 ## 👩‍💻 Contributors
 - Jade GURNAUD
